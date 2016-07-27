@@ -1,0 +1,299 @@
+<!--
+	页面目录页
+	分为八个目录
+	用户基础---登录、注册、忘记密码等：base_      张阳
+	保持联系：contact_                          张阳
+	会员服务---我的消费养老金：pension_                王行
+	会员服务---我的虚拟卡：vcard_                      王行
+	会员服务---我的银行卡：bank_                 张阳、王行
+	会员服务---我的卷库：voucher_                张阳
+	会员服务---我的资料：user_                   张阳
+	最新资讯：new_                                   王行
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  	<meta name="format-detection" content="telephone=no" />
+	<title>消费养老CCPP</title>
+	<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico" />
+	<link rel="stylesheet" href="assets/css/weui.css" />
+	<link rel="stylesheet" href="assets/css/jquery-weui.css"/>
+	<link rel="stylesheet" href="assets/css/app.css"/>
+	<script src="assets/js/jquery.min.js"></script>
+</head>
+<body>
+	<style type="text/css">
+		h3{color: #FFA800; font-size: 20px; padding: 10px; text-align: center;}
+	</style>
+	
+	<div class="weui_cells weui_cells_access">
+		<h3>用户基础</h3>
+		<a class="weui_cell" href="base_login.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>登录</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="base_find_password.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>找回密码-1 验证手机</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="base_find_new.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>找回密码-2 新密码</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="base_register.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>注册-1设置密码</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="base_register_sms.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>注册-2验证码</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+	</div>
+	
+	<div class="weui_cells weui_cells_access">
+		<h3>保持联系</h3>
+		<a class="weui_cell" href="contact_news.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>新闻</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="contact_news_con.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>新闻详情</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="contact_us.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>联系我们</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+	</div>
+	
+	<div class="weui_cells weui_cells_access">
+		<h3>我的消费养老金</h3>
+		<a class="weui_cell" href="pension_home.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>欢迎页</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="pension_coin.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>我的小金</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="pension_detail.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>我的消费养老金</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="pension_coin_set.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>设置</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="pension_coin_Starbucks.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>小金记录</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="pension_remind.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>消费养老金提醒</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+	</div>
+	
+	<div class="weui_cells weui_cells_access">
+		<h3>我的虚拟卡</h3>
+		<a class="weui_cell" href="vcard_home.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>首次打开介绍页</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="vcard_myVcard.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>我的虚拟卡</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+	</div>
+	
+	<div class="weui_cells weui_cells_access">
+		<h3>我的银行卡</h3>
+		<a class="weui_cell" href="bank_first.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>首次打开介绍页</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="bank_list.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>我的银行卡----列表</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="bank_reg1.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>输入银行卡号</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="bank_reg2.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>银行卡类型</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="bank_reg3.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>手机验证码</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="bank_information.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>我的银行卡——详情</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="bank_coin_list.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>银行卡小金记录</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+	</div>
+	
+	<div class="weui_cells weui_cells_access">
+		<h3>我的券库</h3>
+		<a class="weui_cell" href="voucher_list.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>我的券库</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="voucher_qr_code.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>小金券</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+	</div>
+	<div class="weui_cells weui_cells_access">
+		<h3>我的资料</h3>
+		<a class="weui_cell" href="user_mine.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>我的资料</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="user_name.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>修改昵称</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="verify_identity.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>实名认证</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="verify_success.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>实名认证通过</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="user_sms.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>修改密码---验证码</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="user_set.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>修改密码---设置密码</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+	</div>
+	
+	<div class="weui_cells weui_cells_access">
+		<h3>最新资讯</h3>
+		<a class="weui_cell" href="new_members.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>会员专享</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="new_shops.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>CCPP商户</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="new_search.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>CCPP商户搜索</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="new_shops_con.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>CCPP商户详情</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="new_shops_map.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>CCPP商户地图</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="voucher_qr_code.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>邀请奖励</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="new_invitation.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>邀请奖励——分享</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+		<a class="weui_cell" href="new_invitation_history.html">
+		    <div class="weui_cell_bd weui_cell_primary">
+		        <p>邀请奖励历史</p>
+		    </div>
+		    <div class="weui_cell_ft"></div>
+		</a>
+	</div>
+
+	<script src="assets/js/jquery-weui.js"></script>
+</body>
+</html>

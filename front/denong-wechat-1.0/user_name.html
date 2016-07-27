@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no"/>
+  <title>我的昵称</title>
+  <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico"/>
+  <link rel="stylesheet" href="assets/css/weui.css"/>
+  <link rel="stylesheet" href="assets/css/jquery-weui.css"/>
+  <link rel="stylesheet" href="assets/css/app.css"/>
+  <script src="assets/js/jquery.min.js"></script>
+  <style>
+    body{
+      background:#f0f0f2;
+    }
+  </style>
+</head>
+<body>
+<div class="body">
+  <div class="weui_cells weui_cells_form wh-user-name-form">
+      <input class="weui_input wh-user-name-set" type="text" placeholder="设置昵称">
+    <span class="wh-user-name-delete">
+      <img src="assets/images/delete.png" alt=""/>
+    </span>
+  </div>
+  <div class="weui-row">
+    <div class="weui-col-10"></div>
+    <div class="weui-col-80">
+      <a href="javascript:;" class="weui_btn weui_btn_primary">确定</a>
+    </div>
+    <div class="weui-col-10"></div>
+  </div>
+</div>
+<script src="assets/js/jquery-weui.js"></script>
+<script>
+  $(function(){
+    $(".wh-user-name-delete").on("click",function(){
+//      console.log($(".wh-user-name-set").val());
+      $(".wh-user-name-set").val("");
+    });
+  });
+</script>
+</body>
+</html>

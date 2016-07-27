@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<title>小金查询</title>
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<!-- 移动设备支持 -->
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<meta content="no-cache,must-revalidate" http-equiv="Cache-Control">
+<meta content="no-cache" http-equiv="pragma">
+<meta content="0" http-equiv="expires">
+<meta content="telephone=no, address=no" name="format-detection">
+<meta name="apple-mobile-web-app-capable" content="yes"> 
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<script src="__PUBLIC__/static/js/jquery-1.9.1.min.js"></script>
+<script src="__PUBLIC__/mobile/js/fastclick.js"></script>
+<script src="__PUBLIC__/mobile/js/bjj.js"></script>
+<script src="__PUBLIC__/mobile/js/jquery.form.js"></script>
+<!-- 移动设备支持 -->
+<link href="__PUBLIC__/mobile/css/reset_new.css" rel="stylesheet" type="text/css">
+<link href="__PUBLIC__/mobile/css/bjj_new.css" rel="stylesheet" type="text/css">
+<title>德浓消费养老</title>
+</head>
+<body>
+<div id="wrap">
+    <div id="tips" style="display: none;position:fixed;z-index:9;width:80%;padding:30% 10%;height:100%;background:rgba(0,0,0,.8);color:#fff;font-size:15px;">
+        "小金"是指小确幸平台处理消费养老金返利结算过程中的数据处理中间符号，并非指用户的积分，也不是实际利益的标识。100小金＝1元消费养老金，用户开户认证后平台才能为其开通消费养老金账号并将账户中的小金转到用户的消费养老金账户。用户可以后续通过平台或者工商银行系统查询消费养老金信息。
+    </div>
+   <!--<img src="{{$static_domain}}/bjj/mobile/images/top03.jpg">-->
+   <div class="r-box">
+     <img src="__PUBLIC__/mobile/images/xiaojin.jpg">
+     <a href="#" id="tipshow"><span class="qa ico"></span></a>
+     <div class="msgb">
+       <p class="fonta" style="margin-top:10%">{$hash['got']}</p>
+       <p class="white">小金总额</p>
+     </div>    
+   </div> 
+   <!--小金明细列表-->
+    
+    <div id="m-lista">
+        <?php if(empty($hash['list'])){?>
+          <div class="msgbox nobdr clr bgcolor"  >
+              
+              <p class="fl" >
+                <span class="fontb grey" ><li style="text-align: center;list-style-type:none" class="fontb grey">最近3个月无小金记录</li></span>
+              </p>
+          </div>    
+        <?php }else{
+            foreach($hash['list'] as $k=>$val){  ?>
+           
+            <div class="msgbox nobdr clr bgcolor">
+              
+              <img src="{$val['logo']}" class="fl imgshow">
+              <p class="fl">
+                <span class="fontb black">{$val['relate_name']}</span>
+                <span class="grey">{$val['created_at']}</span>
+              </p>
+              <p class="fr" align="right">
+                <span class="fontb blue"><a style="color:#f9a825">+{$val['coin']}</a></span>
+                <span class="blue">{$val['comment']}</span>
+              </p>
+            </div>
+            
+            <?php }?>
+        <?php }?>
+              
+    </div>
+        <div class="msgbox nobdr clr" style="text-align: center;display: none" id="bjjlistload">
+                <img src="__PUBLIC__/mobile/images/2.gif"/>
+        </div>
+            <div class="m-down">
+                <a class="u-down" data="list1" href="javascript:void(0);">+ 点击查看更多</a>
+            </div>
+     
+</div>
+<include file="./alert" />
+<include file="./alert" title="弹窗" />
+<script>
+    $("#tipshow,#tips").click(function(){
+        $("#tips").toggle();
+    });
+    var page=1;
+    var month = {$hash['month']};
+    var year = {$hash['year']};
+    var current = {$hash['current_page']};
+    var total={$hash['total_pages']}; 
+    //if(total == 1)$(".m-down").hide();
+    //滑动加载
+    $(".u-down").on("click",
+            function() {
+                var isis = $(this).attr("data");
+                downlimit(isis);
+            });
+    var i = 1;
+    var j = 1;
+    function downlimit(){
+      if(current<total){
+          page++;
+          datatime = year + '' +month;
+      }else{
+        if (i == 1) {
+          // console.log('有数据减月份');
+          month = month - 1;
+          if(month == 0){
+            month = 12;
+            year = year - 1;
+          }
+          if (month < 10) {
+            month = "0" + month
+          }
+          if (month == "01") {
+            i = 0;
+          }
+          datatime = year + "" + month;
+        } else {
+          // console.log('有数据减年份');
+          year = year - 1;
+          month = 12;
+          i = 1;
+          datatime = year + "" + month;
+        }
+        page = 1;
+      }
+        $("#bjjlistload").show();
+         $.ajax({
+                url:"{:U('Xiaojin/xiaojinpage')}",
+                data: {
+                  page:page,
+                  month:datatime,
+                },
+                type:"post",
+                dataType:'json',      
+                success:function(data){
+                    $("#bjjlistload").hide();
+                    total = data.total_pages;
+                    current = data.current_page;
+                    console.log(data.year+data.month+data.current_page+'页');
+                    var jData = eval(data.list);
+                    if(data.list == undefined || data.list.length == 0){
+                      $("#m-lista").append('<div class="m-down"><a class="u-down">'+data.tips+'</a></div>');
+                    }else{
+                      for(var i=0; i < jData.length; i++)
+                      {
+                          $("#m-lista").append('<div class="msgbox nobdr clr bgcolor"'
+                                  +'">'+'<img src="'+jData[i].logo+'" class="fl imgshow">'
+                                  +'<p class="fl"><span class="fontb black">'
+                                  +(jData[i].relate_name==null?"":jData[i].relate_name)
+                                  +'</span><span class="grey">'+jData[i].created_at
+                                  +'</span></p><p class="fr" align="right"><span class="fontb blue"><a style="color:#f9a825">+'
+                                  +jData[i].coin+'</a></span><span class="blue">'+(jData[i].comment==null?"":jData[i].comment)+'</span></p></div>');
+                      }
+                    }
+                    
+                    /*if(current>=total){
+                      if (j == 1) {
+                        month = month - 1;
+                        if(month == 0){
+                          month = 12;
+                          year = year - 1;
+                        }
+                        if (month < 10) {
+                          month = "0" + month
+                        }
+                        if (month == "01") {
+                          j = 0;
+                        }
+                        datatime = year + "" + month;
+                      } else {
+                        year = year - 1;
+                        month = 12;
+                        j = 1;
+                        datatime = year + "" + month;
+                      }
+                      page = 1;
+                    }else{
+                      page = page + 1;
+                    } */
+                }
+            });    
+    }
+</script>
+</body>
+</html>

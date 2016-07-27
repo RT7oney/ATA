@@ -1,0 +1,79 @@
+{
+    "button": [
+        {
+            "name": "会员服务",
+            "sub_button": [
+                {
+                    "type": "view",
+                    "name": "我的消费养老金",
+                    "url": "http://subs.wechat.test.denong.com/index.php?do=pension&cmd=index"
+                },
+                {
+                    "type": "view",
+                    "name": "我的虚拟卡",
+                    "url": "http://subs.wechat.test.denong.com/index.php?do=vcard&cmd=cardHome"
+                },
+                {
+                    "type": "view",
+                    "name": "我的银行卡",
+                    "url": "http://subs.wechat.test.denong.com/index.php?do=bank&cmd=list"
+                },
+                {
+                    "type": "view",
+                    "name": "我的券库",
+                    "url": "http://subs.wechat.test.denong.com/index.php?do=voucher&cmd=index"
+                },
+                {
+                    "type": "view",
+                    "name": "我的资料",
+                    "url": "http://subs.wechat.test.denong.com/index.php?do=user&cmd=userinfo"
+                }
+            ]
+        },
+        {
+            "name": "服务中心",
+            "sub_button": [
+                {
+                    "type": "view",
+                    "name": "CCPP商户",
+                    "url": "http://subs.wechat.test.denong.com/index.php?do=merchant&cmd=index"
+                },
+                {
+                    "type": "view",
+                    "name": "小确幸下载",
+                    "url": "http://subs.wechat.test.denong.com/index.php?do=wechat&cmd=download"
+                },
+                {
+                    "type": "view",
+                    "name": "邀请奖励",
+                    "url": "http://subs.wechat.test.denong.com/index.php?do=news&cmd=invitereword"
+                },
+                {
+                    "type": "scancode_push",
+                    "name": "扫一扫",
+                    "key": "rselfmenu_0_1"
+                }
+            ]
+        },
+        {
+            "name": "了解我们",
+            "sub_button": [
+                {
+                    "type": "view",
+                    "name": "关于CCPP",
+                    "url": "http://www.denong.com"
+                },
+                {
+                    "type": "view",
+                    "name": "新闻",
+                    "url": "http://subs.wechat.test.denong.com/index.php?do=contact&cmd=news"
+                },
+                {
+                    "type": "view",
+                    "name": "联系我们",
+                    "url": "http://subs.wechat.test.denong.com/index.php?do=contact&cmd=contact"
+                }
+            ]
+        }
+    ]
+}

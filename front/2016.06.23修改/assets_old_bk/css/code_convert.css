@@ -1,0 +1,17 @@
+/************************************************
+*加入兑换计划页面（code_convert.html）
+************************************************/
+.body{width:100%;max-width:640px;margin:auto}
+.img{width:100%;}
+.img img{display: block;  width:100%;}
+.covert-main{text-align: center;padding-top: 20px;}
+.veri{width:115px;}
+.btn{padding:20px 0;}
+.wh-label{width:4em;}
+/**************************************************
+*成功加入兑换计划页面（code_convert_success.html）
+**************************************************/
+/*.body{width:100%;max-width:640px;margin:auto}*/
+.code-convert-success-main{text-align: center;padding:30% 0 20px 0;}
+.success:before{color:#09bb07;}
+.code-convert-success-main p{padding-top: 20px;}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  	<meta name="format-detection" content="telephone=no" />
+	<title>注册</title>
+	<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico" />
+	<link rel="stylesheet" href="assets/css/weui.css" />
+	<link rel="stylesheet" href="assets/css/jquery-weui.css"/>
+	<link rel="stylesheet" href="assets/css/app.css"/>
+	<script src="assets/js/jquery.min.js"></script>
+</head>
+<body class="zy-base-main zy-login-main">
+	<div class="zy-login-block">
+		<div class="zy-logo"><img src="assets/images/login_logo.png"/></div>
+		<form method="post">
+			<div class="zy-paw-ts">验证码已发送至手机137****1831，请注意查收</div>
+			<div class="zy-find-li">
+				<div class="zy-find-l"><input type="password" class="zy-login-text zy-sms-text zy-sms zy-sms-val" placeholder="验证码" /></div>
+				<div class="zy-find-r"><input type="button" id="reg_sms" class="zy-login-btn zy-sms-btn" value="60s后重新发送" onclick="regsms(this)" disabled/></div>
+			</div>
+			<div class="zy-login-li2">
+				<input type="button" class="zy-login-btn" value="注册"/>
+			</div>
+		</form>
+	</div>
+	<script src="assets/js/jquery-weui.js"></script>
+	<script src="assets/js/base.js"></script>
+	<script>	
+		$(function(){
+			regsms()
+		})
+	</script>
+</body>
+</html>

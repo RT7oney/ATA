@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC"-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta content="{$keywords}" name="keywords">
+    <meta content="{$description}" name="description">
+    <title>{$webtitle}--用户中心</title>
+    <css href="__CSS__/bootstrap.min.css" />
+    <css href="__CSS__/style.css" />
+    <css href="__CSS__/animate.css" />
+</head>
+<body>
+<div class="vbox">
+    <div class="h1 font-bold m-t-xl">
+	用户中心
+    </div>
+    <div class="m-t-lg wrapper-md animated fadeInUp">
+        <div class="container aside-xxl">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">
+                    用户登陆
+                </div>
+                <div class="panel-body">
+                    <form class="bs-example form-horizontal" method="post" action="{:U()}">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">
+                                用户名
+                            </label>
+                            <div class="col-lg-10">
+                                <input name="username" type="text" class="form-control" placeholder="用户名">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">
+                                密码
+                            </label>
+                            <div class="col-lg-10">
+                                <input name="password" type="password" class="form-control" placeholder="密码">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <div class="checkbox i-checks">
+                                    <label>
+                                        <input type="checkbox" checked="">
+                                        <i>
+                                        </i>
+                                        保存密码
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button type="submit" class="btn btn-success">
+                                    登 陆
+                                </button>
+                                <div class="pull-right">
+                                    <a href="{:U('reg')}" class="text-info">
+                                        注册用户
+                                    </a>
+                                    <a href="#" class="text-info">
+                                        忘记密码
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center padder">
+	<p>
+		<small>{$webtitle} &copy; 2014</small>
+	</p>
+	</div>
+</div>
+<js href="__JS__/jquery.js" />
+<js href="__JS__/bootstrap.min.js" />
+</body>
+</html>

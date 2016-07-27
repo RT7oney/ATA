@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  	<meta name="format-detection" content="telephone=no" />
+	<title>小金券</title>
+	<link rel="icon" type="image/x-icon" href="assets/images/favicon.ico" />
+	<link rel="stylesheet" href="assets/css/weui.css" />
+	<link rel="stylesheet" href="assets/css/jquery-weui.css"/>
+	<link rel="stylesheet" href="assets/css/app.css"/>
+	<script src="assets/js/jquery.min.js"></script>
+</head>
+<body class="zy-qr-bg">
+	<div class="zy-qr-logo"><img src="assets/images/news-lkl.png"/></div>
+	<div class="zy-qr-box">
+		<div class="zy-qr-name">星巴克</div>
+		<div class="zy-qr-title">消费满200元立返500小金</div>
+		<div class="zy-qr-btn zy-qr-show"><input type="button" value="立即使用" class="weui_btn weui_btn_primary zy-qr-open" /></div>
+		<div class="zy-qr-date zy-qr-show">有效期：2016.03.31-2016.04.05</div>
+		<div class="zy-qr-ms zy-qr-show">为每一位顾客打造个性化服务</div>
+		<div class="zy-qr-banner zy-qr-show"><img src="assets/images/qr-banner.jpg"/></div>
+		<div class="zy-qr-ewm zy-qr-hide"><img src="assets/images/qr-ewm.jpg"/></div>
+		<div class="zy-qr-btn zy-qr-hide"><input type="button" value="关 闭" class="weui_btn weui_btn_primary zy-qr-close" /></div>
+	</div>
+	<div class="zy-qr-go zy-qr-show">
+			<div class="weui_cells weui_cells_access">
+		        <a class="weui_cell" href="javascript:;">
+		          <div class="weui_cell_hd"><img src=""></div>
+		          <div class="weui_cell_bd weui_cell_primary">
+		            <p>星巴克</p>
+		          </div>
+		          <span class="weui_cell_ft"></span>
+		        </a>
+		    </div>
+	</div>
+	<script src="assets/js/jquery-weui.js"></script>
+	<script>
+		$(function(){
+			$(".zy-qr-open").click(function(){
+				$(".zy-qr-hide").show()
+				$(".zy-qr-show").hide()
+			})
+			$(".zy-qr-close").click(function(){
+				$(".zy-qr-hide").hide()
+				$(".zy-qr-show").show()
+			})
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC"-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta content="{$keywords}" name="keywords">
+    <meta content="{$description}" name="description">
+    <title>{$webtitle}--用户中心</title>
+    <css href="__CSS__/bootstrap.min.css" />
+    <css href="__CSS__/style.css" />
+    <css href="__CSS__/animate.css" />
+</head>
+<body>
+<div class="vbox">
+    <div class="h1 font-bold m-t-xl">用户中心</div>
+    <div class="m-t-lg wrapper-md animated fadeInUp">
+        <div class="container aside-xxl">
+          <form id="form" method="post" action="{:U()}" data-parsley-validate>
+            <div class="panel panel-default">
+              <div class="panel-heading font-bold">
+                用户注册
+              </div>
+              <div class="panel-body">
+                <div class="form-group">
+                  <label>用户名</label>
+                  <input type="text" class="form-control" id="username" name="username" data-parsley-length="[4, 30]" required>                        
+                </div>
+                <div class="form-group">
+                  <label>Email</label>
+                  <input class="form-control" type="email" name="email" required>                        
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" class="form-control" id="password" name="password" data-parsley-length="[6, 30]" required>   
+                </div>
+                <div class="form-group">
+                    <label>重复密码</label>
+                    <input type="password" class="form-control" name="repassword" data-parsley-equalto="#password" required>      
+                </div>
+              </div>
+              <div class="panel-footer text-right bg-light lter">
+                <button type="submit" class="btn btn-success btn-s-xs">注 册</button>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+ 	<div class="text-center padder">
+	<p>
+		<small>{$webtitle} &copy; 2014</small>
+	</p>
+	</div>
+</div>
+<js href="__JS__/jquery.js" />
+<js href="__JS__/bootstrap.min.js" />
+<js href="__JS__/parsley.min.js" />
+<js href="__JS__/zh_cn.js" />
+<script type="text/javascript">
+$(document).ready(function(){
+	var parsleyInstance = $('#username').parsley();
+	var onsubmit=false;
+	$("#username").blur(function(){
+		$.post("{:U('validate')}","username="+$(this).val()).success(function(data){
+			window.ParsleyUI.removeError(parsleyInstance, "username");
+			if(data=="false"){
+			 	window.ParsleyUI.addError(parsleyInstance,"username","抱歉！用户名已存在");
+             }else{
+			 	onsubmit=true;
+			 }
+		});
+	});
+	$("form").submit(function(e){
+		if(onsubmit==false){
+			e.stopImmediatePropagation();
+			e.preventDefault();
+		}
+	});
+})
+</script>
+</body>
+</html>
