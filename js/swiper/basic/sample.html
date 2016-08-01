@@ -1,0 +1,234 @@
+﻿<!-- swiper.test -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no" />
+    <title>swiper测试</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico" />
+    <link rel="stylesheet" href="assets/css/weui.css" />
+    <link rel="stylesheet" href="assets/css/jquery-weui.css" />
+    <link rel="stylesheet" href="assets/css/app.css" />
+    <link rel="stylesheet" href="assets/css/code_convert.css" />
+    <link rel="stylesheet" href="assets/css/cut-img.css" />
+    <link rel="stylesheet" href="assets/css/swiper.min.css">
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery-weui.js"></script>
+    <script src="assets/js/jweixin-1.0.0.js"></script>
+    <script src="assets/js/cropbox.js"></script>
+    <script src="assets/js/base.js"></script>
+    <script src="assets/js/tab.js"></script>
+    <script src="assets/js/swiper.js"></script>
+    <script src="assets/js/swiper.min.js"></script>
+
+    <body class="zy-vc-bg">
+        <!-- <div class="weui_tab">
+            <div class="swiper-slide">lalala</div>
+            <div class="swiper-slide">lalala</div>
+            <div class="swiper-slide">lalala</div>
+            <div class="swiper-slide">lalala</div>
+            <div class="swiper-slide">lalala</div>
+        </div> -->
+        <div class="weui_tab">
+            <div class="weui_navbar wh-voucher-navbar">
+                <a id="check-noused" href="javascript:;" class="weui_navbar_item weui_bar_item_on wh-voucher-navbar active">
+                    <span>未使用</span>
+                </a>
+                <a id="check-used" href="javascript:;" class="weui_navbar_item weui_bar_item_on wh-voucher-navbar">
+                    <span>已使用</span>
+                </a>
+                <a id="checked-used" href="javascript:;" class="weui_navbar_item weui_bar_item_on wh-voucher-navbar active" style="display:none;">
+                    <span>已使用</span>
+                </a>
+                <a id="check-overtime" href="javascript:;" class="weui_navbar_item weui_bar_item_on wh-voucher-navbar">
+                    <span>已过期</span>
+                </a>
+                <a id="checked-overtime" href="javascript:;" class="weui_navbar_item weui_bar_item_on wh-voucher-navbar active" style="display:none;">
+                    <span>已过期</span>
+                </a>
+            </div>
+            <div class="weui_tab_bd">
+                <div class="weui_tab_bd_item weui_tab_bd_item_active">
+                    <div id="noused" class="zy-vc-list zy-vc-wei">
+                        <a href="?do=voucher&cmd=voucher" class="zy-vc-li">
+                            <div class="zy-vc-logo"><img src="assets/images/xbklogo.png" /></div>
+                            <div class="zy-vc-name">星巴克</div>
+                            <div class="zy-vc-ms">消费满200元立返500小金</div>
+                            <div class="zy-vc-ewm"><img src="assets/images/vc-ewm.png" /></div>
+                        </a>
+                    </div>
+                </div>
+                <div id="used-block" class="weui_tab_bd_item weui_tab_bd_item_active" style="display:none;">
+                    <div id="used" class="zy-vc-list zy-vc-yi">
+                        <div class="wh-voucher-none">
+                            <div class="wh-voucher-img">
+                                <img src="assets/images/none.png">
+                            </div>
+                            <p>暂无未使用的券</p>
+                        </div>
+                    </div>
+                    <p id="used-add-more" style="display: none;text-align: center;padding-bottom: 10%;">查看更多</p>
+                </div>
+                <div id="overtime-block" class="weui_tab_bd_item weui_tab_bd_item_active" style="display:none;">
+                    <div id="overtime" class="zy-vc-list zy-vc-guo">
+                        <div class="wh-voucher-none">
+                            <div class="wh-voucher-img">
+                                <img src="assets/images/none.png">
+                            </div>
+                            <p>暂无未使用的券</p>
+                        </div>
+                    </div>
+                    <p id="overtime-add-more" style="display: none;text-align: center;padding-bottom: 10%;">查看更多</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+    $(".weui_navbar a").each(function() {
+        $(this).click(function() {
+            $(".weui_navbar a").removeClass('active');
+            $(this).addClass('active');
+        });
+    });
+    // var noused_page = 1;
+    // var used_page = 1;
+    // var overtime_page = 1;
+
+    // // var mySwiper = new Swiper('.swiper-container', {
+    // //     loop: true,
+    // //     autoplay: 3000,
+    // // });
+
+    // function addVoucher(action, page) {
+    //     // console.log(page);
+    //     // console.log(action);
+    //     if (action == 'noused') {
+    //         var label = '未使用';
+    //     } else if (action == 'used') {
+    //         var label = '已使用';
+    //     } else {
+    //         var label = '已过期';
+    //     }
+    //     $.ajax({
+    //         type: 'post',
+    //         url: '?do=voucher&cmd=index',
+    //         data: {
+    //             action: action,
+    //             page: page,
+    //         },
+    //         dataType: 'json',
+    //         success: function(msg) {
+    //             console.log(msg);
+    //             // console.log(label);
+    //             $.hideLoading();
+    //             $("#check-" + action + "").hide();
+    //             $("#checked-" + action + "").show();
+    //             if (msg.flag == 1) {
+    //                 var total = msg.data.total_pages;
+    //                 var current = msg.data.currentPage;
+    //                 if (total > current) {
+    //                     $("#" + action + "-add-more").show();
+    //                 } else {
+    //                     $("#" + action + "-add-more").hide();
+    //                 }
+    //                 var list = msg.data.list;
+    //                 for (var i = 0; i < list.length; i++) {
+    //                     $("#" + action + "").append('<a href="#" class="zy-vc-li"><div class="zy-vc-logo"><img src="assets/images/dnlogo.png" /></div><div class="zy-vc-name">' + list[i].merchant_name + '</div><div class="zy-vc-ms">' + list[i].commit + '(' + list[i].coin + '小金)</div></a>');
+    //                 }
+    //             } else if (msg.flag == 1.5) {
+    //                 $("#" + action + "").append('<div class="wh-voucher-none"><div class="wh-voucher-img"><img src="assets/images/none.png"></div><p>暂无' + label + '的券</p></div>');
+    //             } else {
+    //                 $.alert(msg.msg);
+    //             }
+    //         },
+    //         error: function(msg) {
+    //             $.hideLoading();
+    //             $.alert("网络出错，请重新刷新页面");
+    //             return false;
+    //         }
+    //     });
+    // }
+
+    // // 未使用
+    // $("#check-noused").click(function() {
+    //     $("#used").empty();
+    //     $("#used").hide();
+    //     $("#overtime").empty();
+    //     $("#overtime").hide();
+    //     $("#noused").show();
+
+    //     $("#check-used").show();
+    //     $("#checked-used").hide();
+    //     $("#used-add-more").hide();
+
+    //     $("#check-overtime").show();
+    //     $("#checked-overtime").hide();
+    //     $("#overtime-add-more").hide();
+    //     used_page = 1;
+    //     overtime_page = 1;
+
+    //     $("#noused-add-more").show();
+    // });
+    // // $("#noused-add-more").click(function() {
+    // //     noused_page++;
+    // //     $.showLoading();
+    // //     addVoucher('noused', noused_page);
+
+    // // });
+
+    // //已经使用
+    // $("#check-used").click(function() {
+    //     $("#checked-used").click();
+    //     $.showLoading();
+
+    //     $("#used").show();
+
+    //     // addVoucher('used', used_page);
+    //     $("#noused").hide();
+    //     $("#overtime").empty();
+    //     $("#overtime").hide();
+
+    //     $("#noused-add-more").hide();
+
+    //     $("#check-overtime").show();
+    //     $("#checked-overtime").hide();
+    //     $("#overtime-add-more").hide();
+    //     noused_page = 1;
+    //     overtime_page = 1;
+    // });
+    // // $("#used-add-more").click(function() {
+    // //     used_page++;
+    // //     $.showLoading();
+    // //     addVoucher('used', used_page);
+    // // });
+
+    // //已过期
+    // $("#check-overtime").click(function() {
+    //     $("#checked-overtime").click();
+    //     $.showLoading();
+
+    //     $("#overtime").show();
+
+    //     // addVoucher('overtime', overtime_page);
+    //     $("#noused").hide();
+    //     $("#used").empty();
+    //     $("#used").hide();
+
+    //     $("#check-used").show();
+    //     $("#checked-used").hide();
+    //     $("#used-add-more").hide();
+
+    //     $("#noused-add-more").hide();
+    //     used_page = 1;
+    //     noused_page = 1;
+    // });
+    // // $("#overtime-add-more").click(function() {
+    // //     overtime_page++;
+    // //     $.showLoading();
+    // //     addVoucher('overtime', overtime_page);
+    // // });
+    </script>
+
+</html>
