@@ -1,0 +1,40 @@
+ 静态刷新页面方法：
+var xmlHttp;
+        if(window.ActiveXObject) {
+            xmlHttp = new ActiveXObject('Microsoft.XMLHTTP');
+        } else if(window.XMLHttpRequest) {
+            xmlHttp = new XMLHttpRequest();
+        }
+//Xmlhttp是一种浏览器对象， 可用于模拟http的GET和POST请求。配合JavaScript可以实现页面数据在无刷新下的定时数据更新，创建新对象
+
+xmlHttp.open("POST","test2.php?do=reg",true);
+//以post的形式转到test2.php，传参reg
+        xmlHttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded;");
+
+xmlHttp.onreadystatechange =UserRegStateChange;
+
+（这个检测状态改变函数是不断执行的，值得状态改变了，才会执行你指定的操作）
+
+//创建成功后，状态改变，执行UserRegStateChange方法
+        xmlHttp.send();
+
+
+xmlHttp有个readyState参数，可以用这参数判定做什么
+
+if(xmlHttp.readyState) == 1{
+
+//做什么，你喜欢
+
+}
+
+
+
+readeState五种状态
+
+
+
+0 － （未初始化）还没有调用send()方法
+ 1 － （载入）已调用send()方法，正在发送请求
+ 2 － （载入完成）send()方法执行完成，已经接收到全部响应内容
+ 3 － （交互）正在解析响应内容
+ 4 － （完成）响应内容解析完成，可以在客户端调用了
