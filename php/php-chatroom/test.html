@@ -1,0 +1,59 @@
+<!-- 服务端 -->
+var fs = require('fs')
+    , http = require('http')
+    , socketio = require('socket.io');
+ 
+var server = http.createServer(function(req, res) {
+    res.writeHead(200, { 'Content-type': 'text/html'});
+    res.end(fs.readFileSync(__dirname + '/index.html'));
+}).listen(8080, function() {
+    console.log('Listening at: http://localhost:8080');
+});
+ 
+var ids=[];
+var io=socketio.listen(server);
+io.on('connection', function (socket) {
+	ids.push(socket.id);
+    socket.on('key', function (msg) {
+        console.log('Message Received: ', msg);
+		console.log('sockid：'+socket.id);
+		console.log(ids);
+		
+		io.sockets.socket(ids[0]).emit('key',msg);//向指定的用户发信息
+                //socket.broadcast.emit('key', msg); //公告
+		//socket.emit('key', msg); //发给自己
+    });
+	socket.on('disconnect',function(){
+		console.log('关闭'+socket.id);
+	});
+});
+<!-- 客户端 -->
+<!doctype html>
+<html>
+<head>
+<title>sss</title>
+<meta charset="utf-8">
+<script src="/socket.io/socket.io.js"></script>
+<script>
+var socket = io.connect('http://localhost:8080');
+socket.on('key', function (data) {
+	document.getElementById('nr').innerHTML+=data.aa+'<br>';
+});
+
+function send(){
+	var v=document.getElementById('sss').value;
+	socket.emit('key',{'aa':v});
+}
+</script>
+
+</head>
+<body>
+
+<div id="nr">
+
+</div>
+<input type="text" id="sss">
+<button 0nClick="send();">发送</button>
+
+</body>
+</html>
