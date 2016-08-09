@@ -205,6 +205,8 @@ class Sock {
 		$ar = array();
 		if ($g['type'] == 'add') {
 			$this->users[$k]['name'] = $g['name'];
+			/*TEST*/
+			$this->users[$k]['head'] = $g['head'];
 			$ar['add'] = true;
 			$ar['content'] = '欢迎' . $g['name'] . '加入！';
 			$ar['users'] = $this->getusers();
@@ -228,7 +230,12 @@ class Sock {
 	function getusers() {
 		$ar = array();
 		foreach ($this->users as $k => $v) {
-			$ar[$k] = $v['name'];
+			// $ar[$k] = $v['name'];
+			/*TEST*/
+			$ar[$k] = array(
+				$v['name'],
+				$v['head'],
+			);
 		}
 		return $ar;
 	}
