@@ -1,0 +1,157 @@
+<extend name="Public/base"/>
+<block name="body">
+	<div class="hbox stretch">
+        <div class="vbox scrollable wrapper m-t-xs">
+            <div class="container projects">
+                <div class="col-lg-9">
+                    <div class="panel b-a">
+                        <div class="panel-heading b-b">
+                            猜你喜欢
+                            <a href="#" class="pull-right text-muted change_movie">
+                                <span class="glyphicon glyphicon-refresh inline"></span>换一批
+                            </a>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row row-sm randMovie">
+                            	<div class="text-center wrapper"><img src="__IMG__/loading.gif" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel b-a">
+                        <div class="panel-heading b-b">
+                            <b>
+                                兑换
+                            </b>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row row-sm">
+                            	<volist name="prize" id="vo">
+                                <div class="col-xs-6 col-sm-4 col-md-3">
+                                    <div class="pos-rlt">
+                                        <a href="{:U('Prize/detail?id='.$vo['id'])}">
+                                            <img src="{$vo['pic']|default='__IMG__/prize.jpg'}" alt="" class="r r-2x img-full prize">
+                                        </a>
+                                    </div>
+                                    <div class="padder-v">
+                                        <a href="{:U('Prize/detail?id='.$vo['id'])}" class="text-ellipsis">
+                                            {$vo['title']}
+                                            <span class="pull-right text-info text-xs">{$vo['integral']}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                </volist>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="panel panel-default">
+                        <div class="vbox">
+                            <div class="scrollable wrapper">
+                                <div class="text-center m-b m-t">
+                                        <img src="{$path|default='__IMG__/user.jpg'}" class="img-circle img-users">
+                                    <div>
+                                        <div class="h4 m-t-xs m-b-xs">{$username}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer bg-info text-center">
+                            <div class="row pull-out">
+                                <div class="col-xs-4">
+                                    <div class="padder-v">
+                                    	<a href="{:U('Users/user?state=follow&id='.$id)}">
+                                        <span class="m-b-xs h3 block text-white">
+                                            {$follow}
+                                        </span>
+                                        <small class="text-muted">
+                                            关注
+                                        </small>
+										</a>
+                                    </div>
+                                </div>
+                                <div class="col-xs-4 dk">
+                                    <div class="padder-v">
+                                    	<a href="{:U('Users/user?state=fans&id='.$id)}">
+                                        <span class="m-b-xs h3 block text-white">
+                                            {$fans}
+                                        </span>
+                                        <small class="text-muted">
+                                            粉丝
+                                        </small>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <div class="padder-v">
+                                        <span class="m-b-xs h3 block text-white">
+                                            {$integral}
+                                        </span>
+                                        <small class="text-muted">
+                                            积分
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vbox">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="activity">
+                                <ul class="list-group no-radius m-b-none m-t-n-xxs list-group-lg no-border">
+                                	<volist name="u_l_list" id="vo">
+                                    <li class="list-group-item">
+                                        <a href="{:U('Users/info?id='.$vo['id'])}" class="thumb-sm pull-left m-r-sm">
+                                            <img src="{$vo['path']|default='__IMG__/user.jpg'}" class="img-circle">
+                                        </a>
+                                        <a href="{:U('Users/info?id='.$vo['id'])}" class="clear">
+                                            <small class="pull-right">{$vo['last_login_time']|tmspan}</small>
+                                            <strong class="block">{$vo['username']}</strong>
+                                        </a>
+                                    </li>
+                                    </volist>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+<script type="text/javascript">
+$(function(){
+	function randMovie(url){
+		$.getJSON(url,function(result){
+			if(result){
+				var html = '';
+				$.each(result, function(i, field){
+					html += '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">';
+					html += '<div class="pos-rlt">';
+					html += '<div class="item-overlay opacity r r-2x bg-black">';
+					html += '<div class="center text-center">';
+					html += '<a href="'+field['url']+'"><span class="glyphicon glyphicon-play i-2x"></span></a>';
+					html += '</div></div>';
+					html += '<a href="'+field['url']+'">';
+					html += '<img src="'+field['pic']+'" alt="'+field['title']+'" class="r r-2x img-full" height="168">';
+					html += '</a></div>';
+					html += '<div class="padder-v">';
+					html += '<a href="'+field['url']+'" class="text-ellipsis">'+field['title']+'</a>';
+					html += '</div></div>';
+				});
+				$(".randMovie").html(html);
+			}else{
+				$(".randMovie").html("<p>没有数据！</p>");
+			}
+	  });
+  }
+  randMovie('{:U("Home/Ajax/randMovie?limit=12")}');
+  
+  $(".change_movie").click(function(){
+  	$(".randMovie").html('<div class="text-center wrapper"><img src="__IMG__/loading.gif" /></div>');
+	randMovie('{:U("Home/Ajax/randMovie?limit=12")}');
+  });
+})
+</script>
+</block>

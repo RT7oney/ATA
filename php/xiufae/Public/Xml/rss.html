@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rss version="2.0">
+<channel>
+<title>{$webtitle}</title> 
+<description>{$webtitle}</description> 
+<link>{$weburl}</link> 
+<language>zh-cn</language> 
+<docs>{$webtitle}</docs> 
+<generator>Rss Powered By {$weburl}</generator> 
+<image>
+<url>{$weblogo}</url> 
+</image>
+<list name="list" order="id desc" limit="30">
+<item>
+<title>{$list.title}</title> 
+<link>{$list.url}</link>
+<author></author>
+<pubDate>{$list.time}</pubDate>
+<description><![CDATA[<img src="{$list.pic}" alt="{$list.title}" style="float:right;margin-left:16px;width:120px;height:150px;"><br/>主演：{$list.actors}<br/>类型：{$list.ctitle}<br/>内容：{$list.content}<br/><a target="_blank" title="观看全文" href="{$list.url}">观看全文</a>
+]]></description> 
+</item>
+</list>
+</channel>
+</rss>
