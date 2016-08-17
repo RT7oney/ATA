@@ -1,0 +1,60 @@
+body {
+MARGIN: 0px;
+PADDING-LEFT: 0px; BORDER-LEFT-WIDTH: 0px;
+PADDING-TOP: 0px;
+PADDING-RIGHT: 0px; BORDER-RIGHT-WIDTH: 0px;
+PADDING-BOTTOM: 0px;BORDER-BOTTOM-WIDTH: 0px;
+BACKGROUND: #ffffff
+FONT-FAMILY: '宋体','新宋体',arial,verdana,sans-serif;
+COLOR: #074F86;
+SCROLLBAR-FACE-COLOR:#FFFFFF;
+SCROLLBAR-HIGHLIGHT-COLOR:#FFFFFF;
+SCROLLBAR-SHADOW-COLOR:#808080;
+SCROLLBAR-3DLIGHT-COLOR:#FCFCFC;
+SCROLLBAR-ARROW-COLOR:#000000;
+SCROLLBAR-TRACK-COLOR:#FFFFFF;
+SCROLLBAR-DARKSHADOW-COLOR:#C0C0C0;
+/*TEXT-ALIGN: center;*/
+FONT-SIZE:9pt;
+LINE-HEIGHT:150%;
+border-collapse: collapse;
+table-layout:fixed;
+/*word-wrap:break-word;*/
+word-break:break-all;
+}
+.inputborder {
+	font-family: Verdana, "宋体";
+	font-size: 12px;
+	border: 1px solid #64a1d0;
+	background-color: #edf7ff;
+}
+
+td{
+font-size:12px;
+color:#074F86;
+}
+table {
+	font-size: 9pt;
+	color: #000000;
+}
+A:link {
+	COLOR: #000000; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #9c0031; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #7d376a; TEXT-DECORATION: underline
+}
+
+.log_td_table {
+	BORDER-RIGHT: #cccccc 1px solid; PADDING-RIGHT: 5px; BORDER-TOP: #cccccc 1px solid; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; BORDER-LEFT: #cccccc 1px solid; PADDING-TOP: 5px; BORDER-BOTTOM: #cccccc 1px solid; BACKGROUND-COLOR: #f8f8f8
+}
+.log {
+	font-size: 12px;
+	background-color: #f5f5f5;
+	border-top: 1px groove;
+	border-right: 1px ridge;
+	border-bottom: 1px ridge;
+	border-left: 1px groove;
+}
