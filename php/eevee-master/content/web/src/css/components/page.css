@@ -1,0 +1,62 @@
+.page.container {
+  height: 100%;
+  padding: 30px 30px;
+  overflow-y: scroll;
+}
+
+.page.title {
+  font-size: 16px;
+  font-weight: bold;
+  padding-left: 0 !important;
+}
+
+.page.options .item {
+  width: 28px;
+  padding: 0 !important;
+}
+.page.options i {
+  display: block !important;
+  margin: 0 !important;
+  border-radius: 20px !important;
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px;
+  text-align: center;
+}
+.page.options i:hover {
+  background: #DCDBDB;
+}
+
+.page.handles .more {
+  font-size: 13px !important;
+  padding: 10px;
+}
+.page.handles > .right {
+  float: right;
+}
+.page.handles > .right > .paginations {
+  float: left;
+  display: block;
+  line-height: 36px;
+  margin-right: 10px;
+}
+.page.handles > .right > .paginations > span {
+  padding: 3px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.page.handles > .right > .paginations > span:hover {
+  background: #C3C3C3;
+  border-radius: 15px;
+}
+.page.handles > .right > .paging {
+  float: right;
+  display: block;
+}
+.page.handles > .right > .paging .button {
+  padding: 10px 10px;
+}
+
+.button.save {
+  font-size: 13px;
+}

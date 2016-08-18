@@ -1,0 +1,30 @@
+#directive-role-editor {
+  width: 500px;
+  box-shadow: 10px 10px 7px 8px #333;
+}
+#directive-role-editor .block {
+  overflow-y: scroll;
+}
+#directive-role-editor label {
+  margin-bottom: 15px;
+}
+#directive-role-editor .divider {
+  font-size: 13px;
+}
+#directive-role-editor .list .item {
+  position: relative;
+  border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+  border-top: none;
+  font-size: 13px;
+}
+#directive-role-editor .list .item:last-child {
+  border-bottom: none;
+}
+#directive-role-editor .list .item .right {
+  position: absolute;
+  right: 10px;
+}
+#directive-role-editor .list .item .content {
+  height: 45px;
+  line-height: 45px;
+}

@@ -1,0 +1,8 @@
+@charset "UTF-8";
+@import "../globals";
+
+#directive-user-information {
+  width: calc(100% - 210px);
+  top: 55px;
+  position: fixed;
+}

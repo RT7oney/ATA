@@ -1,0 +1,48 @@
+<div id="page-login" ng-show="showPage">
+
+
+    <div class="mask"></div>
+
+    <div class="mask-cover"></div>
+
+    <div id="wrapper" class="ui middle aligned center aligned grid">
+
+        <div class="column">
+
+            <h2 class="ui teal image header">
+                <!--<img src="images/logo.png" class="image">-->
+                <div class="content">
+                    EEVEE
+                </div>
+            </h2>
+
+            <form class="ui large form">
+                <div class="ui stacked segment">
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input id="account" type="text" name="text" placeholder="用户名或邮箱" ng-model="account">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            <input type="password" name="password" placeholder="密码" ng-model="password">
+                        </div>
+                    </div>
+                    <!--<div class="ui fluid large teal submit button" ng-click="login()">登录</div>-->
+                </div>
+
+                <div class="ui error message"></div>
+
+            </form>
+
+            <div class="ui message" ng-click="login()">
+                <a href="#">登录</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

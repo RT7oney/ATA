@@ -1,0 +1,89 @@
+<div id="eevee-layout" class="page">
+
+    <div id="eevee-header" class="ui menu">
+        <div class="item brand">EEVEE</div>
+        <a class="item"><i class="sidebar icon"></i></a>
+        <div class="right menu">
+
+            <div class="ui dropdown item" tabindex="0">
+                <i class="grid layout icon"></i>
+                <div id="shortcuts-wrap" class="user panel menu transition hidden" tabindex="-1">
+                    <div class="item">一些快捷方式...</div>
+                </div>
+            </div>
+
+            <div class="ui dropdown item" tabindex="0">
+                <i class="mail outline icon"></i>
+                <div id="messages-wrap" class="user panel menu transition hidden" tabindex="-1">
+                    <div class="item">一些系统消息...</div>
+                </div>
+            </div>
+
+            <div class="ui dropdown item" tabindex="0">
+                <img src="images/photos/bob.jpeg" alt="" class="ui avatar image">
+                <i class="dropdown icon"></i>
+                <div class="user panel menu transition hidden" tabindex="-1">
+                    <div class="item" ng-click="userInformation()">个人信息</div>
+                    <div class="item"><a href="#/app/dashboard">面板</a></div>
+                    <div class="divider"></div>
+                    <div class="item" ng-click="logout()">退出登录</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <aside id="eevee-sidebar" class="sidebar" sidebar>
+
+        <ul class="ui vertical menu">
+
+
+            <li class="item" ng-repeat="menu in userMenus">
+                <a href="{{ menu.link || '#' }}">
+                    <if ng-if="menu.icon">
+                        <i class="{{ menu.icon }}"></i>
+                    </if>
+                    {{ menu.name }}
+                </a>
+            </li>
+            <!--<li class="item">-->
+            <!--<a href="#/app/post"><i class="edit icon"></i></i>文章</a>-->
+            <!--</li>-->
+            <!--<li class="item">-->
+            <!--<a href="#/app/term"><i class="block layout icon"></i>分类</a>-->
+            <!--</li>-->
+            <!--<li class="item">-->
+            <!--<a href="#/app/media"><i class="video play icon"></i>多媒体</a>-->
+            <!--</li>-->
+            <!--<li class="item">-->
+            <!--<a href="#/app/user"><i class="user icon"></i>用户</a>-->
+            <!--</li>-->
+            <!--<li class="item">-->
+            <!--<a href="#/app/role"><i class="spy icon"></i>角色</a>-->
+            <!--</li>-->
+            <!--<li class="item">-->
+            <!--<a href="#/app/theme"><i class="paint brush icon"></i>主题</a>-->
+            <!--</li>-->
+            <!--<li class="item">-->
+            <!--<a href="#/app/plugin"><i class="puzzle icon"></i>插件</a>-->
+            <!--</li>-->
+            <!--<li class="item">-->
+            <!--<a class="" href="#"><i class="setting icon"></i>配置</a>-->
+            <!--<ul>-->
+            <!--<li class="item"><a href="#/app/config/site">网站</a></li>-->
+            <!--<li class="item"><a href="#/app/config/email">邮箱</a></li>-->
+            <!--&lt;!&ndash;<li class="item"><a href="#/app/config/media">多媒体</a></li>&ndash;&gt;-->
+            <!--</ul>-->
+            <!--</li>-->
+            <!--<li class="item">-->
+            <!--<a href="#"><i class="area info icon"></i></i>帮助</a>-->
+            <!--</li>-->
+        </ul>
+
+    </aside>
+
+    <section id="eevee-placeholder">
+
+        <div id="eevee-view" ui-view></div>
+    </section>
+
+</div>

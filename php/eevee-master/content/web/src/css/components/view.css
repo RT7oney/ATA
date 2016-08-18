@@ -1,0 +1,62 @@
+.view.slide {
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: none;
+  margin-left: 0;
+  position: absolute;
+  background: #fff;
+  -moz-animation-duration: 0.3s;
+  -webkit-animation-duration: 0.3s;
+  animation-duration: 0.3s;
+  -moz-animation-delay: 0.1s;
+  -webkit-animation-delay: 0.1s;
+  animation-delay: 0.1s;
+  -moz-animation-iteration-count: slideInRight;
+  -webkit-animation-iteration-count: slideInRight;
+  animation-iteration-count: slideInRight;
+}
+.view.title {
+  position: absolute;
+  width: 100%;
+  margin-bottom: 0;
+  border-bottom: 1px solid #DBDBDB !important;
+  z-index: 999997;
+  margin-left: 0 !important;
+  height: 45px;
+  margin-right: 0;
+}
+.view.title .item.label {
+  width: 35px;
+  margin: 0;
+  padding: 0;
+}
+.view.title .item.label:last-child {
+  margin-right: 10px;
+}
+.view.title .item.label i {
+  display: block;
+  margin: 0 !important;
+  border-radius: 20px;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+}
+.view.title .item.label i:hover {
+  background: #E6E6E6;
+}
+.view.content {
+  width: 100%;
+  height: 100%;
+  background: none;
+  border-radius: 0;
+  margin-top: 0;
+  padding-top: 45px;
+}
+.view.content .block {
+  overflow-y: scroll;
+  height: 100%;
+  padding: 20px;
+}

@@ -1,0 +1,25 @@
+#app-post {
+
+  #posts {
+
+    .item {
+      padding:20px 15px;
+      background: #fff;
+      border-radius: 10px;
+
+      &:hover{
+        background: #e7edf3;
+      }
+
+      .attaches {
+        position: absolute;
+        right: 50px;
+
+        a{
+          margin-left: 10px;
+        }
+
+      }
+    }
+  }
+}

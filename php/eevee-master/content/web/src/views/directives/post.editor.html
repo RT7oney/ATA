@@ -1,0 +1,39 @@
+<div id="directive-post-editor" class="view slide">
+
+    <div class="view title ui secondary menu">
+        <div class="item">
+            编辑文章
+        </div>
+
+        <div class="right menu">
+            <div class="item label">
+                <i class="icon checkmark" ng-click="submitPost()"></i>
+            </div>
+            <div class="item label">
+                <i class="icon share" ng-click="hidePostEditor()"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="view content">
+        <div class="block">
+            <div class="ui form">
+                <div class="field">
+                    <label>标题</label>
+                    <input type="text" placeholder="">
+                </div>
+                <div class="field">
+                    <label>分类栏目</label>
+                    <input type="text" placeholder="">
+                </div>
+                <div class="field">
+                    <label>摘要</label>
+                    <textarea rows="2" cols="3"></textarea>
+                </div>
+
+                <textarea id="post-editor" cols="30" rows="10" ng-model="post.content"></textarea>
+
+            </div>
+        </div>
+    </div>
+</div>

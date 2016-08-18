@@ -1,0 +1,56 @@
+<div id="directive-user-editor" class="view slide">
+
+    <div class="view title ui secondary menu">
+        <div class="item">
+            编辑用户
+        </div>
+
+        <div class="right menu">
+            <div class="item label">
+                <i class="icon checkmark" ng-click="submitUser()"></i>
+            </div>
+            <div class="item label">
+                <i class="icon share" ng-click="closeUserEditor()"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="view content">
+        <div class="block">
+            <div class="ui form">
+                <div class="field">
+                    <label>用户名</label>
+                    <input type="text" placeholder="" ng-model="user.username">
+                </div>
+                <div class="field">
+                    <label>初始密码</label>
+                    <input type="password" placeholder="" ng-model="user.password">
+                </div>
+                <div class="field">
+                    <label>邮箱</label>
+                    <input type="text" placeholder="" ng-model="user.email">
+                </div>
+                <div class="field">
+                    <label>角色</label>
+
+                    <select class="ui dropdown" ng-model="user.role">
+                        <option ng-repeat="role in roles" value="{{ role.id }}">{{ role.name }}</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" tabindex="0" class="">
+                        <label>首次登录修改初始密码</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" tabindex="0" class="">
+                        <label>发送邮件通知</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,9 @@
+#app-config-email > form {
+  padding: 0 15px;
+}
+#app-config-email > form td:first-child {
+  width: 150px;
+}
+#app-config-email > form td {
+  padding: 10px 0;
+}

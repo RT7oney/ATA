@@ -1,0 +1,48 @@
+body {
+  background: #EEEEEE;
+}
+
+h1 {
+  text-align: center;
+  color: #b2b0a9;
+  font-size: 56px;
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+p{
+  text-align: center;
+}
+
+.wrapper {
+  width: 960px;
+  margin: 0 auto;
+  padding: 30px 40px;
+  font-size: 12px;
+  box-shadow: inset 0px 0px 10px rgba(255, 255, 255, 0.5), 0px 0px 15px rgba(75, 75, 75, 0.3);
+  background-color: rgba(255, 255, 255, 0.27);
+  border-radius: 10px;
+  overflow: hidden;
+  /*border: 1px solid #aaa;*/
+}
+
+.next{
+  border-radius: 100px !important;
+  width: 100px;
+  height: 40px;
+  line-height:20px !important;
+  display: block !important;
+  margin: 0 auto !important;
+  margin-top: 15px !important;
+  margin-bottom: 15px !important;
+}
+
+
+/* 协议 */
+.content{
+  font-size: 13px;
+}
+
+.content p{
+  margin: 0;
+  text-align: left;
+}

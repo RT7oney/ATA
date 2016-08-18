@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+@import "../globals";
+
+#app-config-site{
+  >form{
+    padding: 0 15px;
+
+    td:first-child{
+      width: 150px;
+    }
+    td{
+      padding: 10px 0;
+    }
+  }
+}

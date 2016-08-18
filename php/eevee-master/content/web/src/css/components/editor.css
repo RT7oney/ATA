@@ -1,0 +1,42 @@
+.editor {
+  background: #fafafa;
+}
+.editor > .menu {
+  position: absolute;
+  width: 100%;
+  margin-bottom: 0;
+  border-bottom: 1px solid #DBDBDB !important;
+  z-index: 999997;
+  margin-left: 0 !important;
+}
+.editor > .menu .item.label {
+  width: 35px;
+  margin: 0;
+  padding: 0;
+}
+.editor > .menu .item.label:last-child {
+  margin-right: 10px;
+}
+.editor > .menu .item.label i {
+  display: block;
+  margin: 0 !important;
+  border-radius: 20px;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+}
+.editor > .menu .item.label i:hover {
+  background: #E6E6E6;
+}
+.editor > .card {
+  width: 100%;
+  height: 100%;
+  background: none;
+  border-radius: 0;
+  margin-top: 0;
+  padding-top: 40px;
+}
+.editor > .card > .block {
+  height: 100%;
+  overflow-y: scroll;
+}

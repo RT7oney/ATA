@@ -1,0 +1,159 @@
+@charset "utf-8";
+@import "globals";
+
+html, body {
+  height: 100%;
+}
+
+body {
+  > .wrapper {
+    height: 100%;
+  }
+}
+
+#__bs_notify__ {
+  font-size: 10px !important;
+  width: 100px;
+  height: 100px;
+  position: fixed;
+  color: #fff !important;
+}
+
+
+
+.pace .pace-progress{
+  z-index: 9999999;
+}
+
+#eevee-layout {
+
+  height: 100%;
+  overflow: hidden;
+
+  #eevee-header {
+    position: fixed;
+    z-index: 999999;
+    height: $layout_header_height;
+    width: 100%;
+    top: 0;
+    left: 0;
+    border-radius: 0;
+    border-style: solid none;
+
+    .brand {
+      width: $layout_header_brand_width;
+    }
+
+    .user.panel {
+      width: 136px;
+      z-index: 999999;
+    }
+
+  }
+
+  #eevee-placeholder {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding-top: $layout_header_height;
+    padding-left: $layout_header_brand_width;
+    overflow: hidden;
+  }
+
+  #eevee-view {
+    position: relative;
+    background: rgb(237, 236, 236);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #eevee-sidebar {
+    position: fixed;
+    top: 0;
+    padding-top: $layout_header_height;
+    width: $layout_header_brand_width;
+    height: 100%;
+    z-index: 999998;
+
+    .menu {
+      width: $layout_header_brand_width;
+      height: 100%;
+      padding: 0;
+      border-radius: 0;
+      border-top: none;
+
+      .item {
+        background: none;
+        list-style: none;
+        padding: 0;
+
+        &:before {
+          height: 0 !important;
+        }
+
+        > a {
+          color: #333;
+          display: block;
+          width: 100%;
+          height: 50px;
+          line-height: 50px;
+          &:hover {
+            background: $c4;
+          }
+          padding-left: 30px;
+        }
+
+        i.icon {
+          margin-right: 5px;
+        }
+
+        &.active {
+          > a {
+            background: $c4;
+          }
+          span:after {
+            content: '\25cc';
+          }
+        }
+
+        span {
+          position: absolute;
+          right: 25px;
+          &:after {
+            content: '\25be';
+            font-size: 18px;
+          }
+        }
+
+        ul {
+          padding: 0;
+          .item {
+            padding: 0;
+            a {
+              height: 30px;
+              line-height: 30px;
+              padding-left: 50px;
+              background: #fff;
+            }
+            &.active {
+              a {
+                background: $c4;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+}
+
+
+
+

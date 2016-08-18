@@ -1,0 +1,10 @@
+{
+  "name": "ueditor-bower",
+  "version": "1.4.3",
+  "description": "Baidu UEditor js files from UEditor php version",
+  "main": [
+      "ueditor.config.js",
+      "ueditor.all.min.js"
+  ],
+  "ignore": []
+}

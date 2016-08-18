@@ -1,0 +1,56 @@
+<div id="directive-role-editor" class="view slide">
+
+    <div class="view title ui secondary menu">
+        <div class="item">
+            编辑角色
+        </div>
+
+        <div class="right menu">
+            <div class="item label">
+                <i class="icon checkmark" ng-click="submitRole(role.id)"></i>
+            </div>
+            <div class="item label">
+                <i class="icon share" ng-click="closeRoleEditor()"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="view content">
+        <div class="block">
+            <div class="ui form">
+                <div class="field">
+                    <label>角色名</label>
+                    <input type="text" placeholder="" ng-model="role.name">
+                </div>
+                <!--<div class="field">-->
+                <!--<label>标识符</label>-->
+                <!--<input type="text" placeholder="" ng-model="role.id">-->
+                <!--</div>-->
+                <div class="field">
+                    <label>描述</label>
+                    <textarea rows="2" cols="3" ng-model="role.description"></textarea>
+                </div>
+                <div class="field">
+                    <label>分配资源权限</label>
+                    <div ng-hide="loadPermissionsDone" class="ui active centered small inline loader"></div>
+                    <div class="ui middle aligned divided list" ng-repeat="(index,item) in permissions">
+                        <p class="ui horizontal divider header">
+                            {{ item.name }}
+                        </p>
+                        <div class="item" ng-repeat="permission in item.permissions">
+                            <div class="right floated content">
+                                <div class="ui button icon {{ permission.checked }}"
+                                     ng-click="clickPermission(index,permission.id)">
+                                    <i class="icon {{ permission.icon || 'plus' }}"></i>
+                                </div>
+                            </div>
+                            <div class="content">
+                                {{ permission.name }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

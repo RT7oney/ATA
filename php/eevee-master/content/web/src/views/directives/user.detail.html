@@ -1,0 +1,70 @@
+<div id="directive-user-detail" class="view slide">
+
+    <div class="view title ui secondary menu">
+        <div class="item">
+            用户详情
+        </div>
+
+        <div class="right menu">
+            <div class="item label">
+                <i class="icon share" ng-click="closePostEditor()"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="view content">
+        <div class="block">
+
+
+            <table class="ui definition small table">
+                <tbody>
+
+                <tr>
+                    <td>头像</td>
+                    <td><img ng-src="{{ user.avatar }}" alt="" class="avatar"></td>
+                </tr>
+
+                <tr>
+                    <td>用户名</td>
+                    <td>{{ user.username }}</td>
+                </tr>
+
+                <tr>
+                    <td>状态</td>
+                    <td>{{ user.status }}</td>
+                </tr>
+
+                <tr>
+                    <td>角色</td>
+                    <td> {{ user.role }}</td>
+                </tr>
+
+                <tr>
+                    <td>邮箱</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+
+                <tr>
+                    <td>来源</td>
+                    <td>{{ user.source }}</td>
+                </tr>
+
+                <tr>
+                    <td>创建时间</td>
+                    <td>{{ user.created_at }}</td>
+                </tr>
+
+                <tr>
+                    <td>更新时间</td>
+                    <td>{{ user.updated_at }}</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+
+</div>

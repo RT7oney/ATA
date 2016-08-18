@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+@import "globals";
+
+#app-role {
+
+  th {
+    .icon {
+      visibility: hidden;
+    }
+    &:hover {
+      .icon {
+        visibility: visible;
+      }
+    }
+  }
+
+  .col-name {
+    width: 10%;
+  }
+
+  .col-permission-amount {
+    text-align: center;
+  }
+
+  .col-status {
+    text-align: center;
+  }
+
+  .col-updated_at {
+    text-align: center;
+    width: 100px;
+  }
+
+  .col-description {
+    width: 45%;
+    padding-left: 100px;
+  }
+
+}

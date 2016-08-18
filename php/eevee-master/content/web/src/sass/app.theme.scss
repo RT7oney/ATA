@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+@import "globals";
+
+#app-themes {
+  #themes {
+    a {
+      position:relative;
+      margin-right: 40px;
+      margin-bottom: 40px;
+      > div {
+        position: absolute;
+        width: 100%;
+        height: 50px;
+        bottom: 0;
+        .bg {
+          background: #333;
+          opacity: 0.2;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+        }
+
+        p{
+          position: relative;
+          z-index: 1;
+
+          button{
+            float: right;
+            width: 70px;
+            margin-top: 8px;
+            font-size: 13px;
+            margin-right: 15px;
+          }
+
+          span{
+            float: left;
+            display: block;
+            line-height: 50px;
+            margin-left: 15px;
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+  

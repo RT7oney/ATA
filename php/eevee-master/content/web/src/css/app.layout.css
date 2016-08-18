@@ -1,0 +1,122 @@
+html, body {
+  height: 100%;
+}
+
+body > .wrapper {
+  height: 100%;
+}
+
+#__bs_notify__ {
+  font-size: 10px !important;
+  width: 100px;
+  height: 100px;
+  position: fixed;
+  color: #fff !important;
+}
+
+.pace .pace-progress {
+  z-index: 9999999;
+}
+
+#eevee-layout {
+  height: 100%;
+  overflow: hidden;
+}
+#eevee-layout #eevee-header {
+  position: fixed;
+  z-index: 999999;
+  height: 55px;
+  width: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 0;
+  border-style: solid none;
+}
+#eevee-layout #eevee-header .brand {
+  width: 210px;
+}
+#eevee-layout #eevee-header .user.panel {
+  width: 136px;
+  z-index: 999999;
+}
+#eevee-layout #eevee-placeholder {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding-top: 55px;
+  padding-left: 210px;
+  overflow: hidden;
+}
+#eevee-layout #eevee-view {
+  position: relative;
+  background: #edecec;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+#eevee-layout #eevee-sidebar {
+  position: fixed;
+  top: 0;
+  padding-top: 55px;
+  width: 210px;
+  height: 100%;
+  z-index: 999998;
+}
+#eevee-layout #eevee-sidebar .menu {
+  width: 210px;
+  height: 100%;
+  padding: 0;
+  border-radius: 0;
+  border-top: none;
+}
+#eevee-layout #eevee-sidebar .menu .item {
+  background: none;
+  list-style: none;
+  padding: 0;
+}
+#eevee-layout #eevee-sidebar .menu .item:before {
+  height: 0 !important;
+}
+#eevee-layout #eevee-sidebar .menu .item > a {
+  color: #333;
+  display: block;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  padding-left: 30px;
+}
+#eevee-layout #eevee-sidebar .menu .item > a:hover {
+  background: #F4F4F4;
+}
+#eevee-layout #eevee-sidebar .menu .item i.icon {
+  margin-right: 5px;
+}
+#eevee-layout #eevee-sidebar .menu .item.active > a {
+  background: #F4F4F4;
+}
+#eevee-layout #eevee-sidebar .menu .item.active span:after {
+  content: '\25cc';
+}
+#eevee-layout #eevee-sidebar .menu .item span {
+  position: absolute;
+  right: 25px;
+}
+#eevee-layout #eevee-sidebar .menu .item span:after {
+  content: '\25be';
+  font-size: 18px;
+}
+#eevee-layout #eevee-sidebar .menu .item ul {
+  padding: 0;
+}
+#eevee-layout #eevee-sidebar .menu .item ul .item {
+  padding: 0;
+}
+#eevee-layout #eevee-sidebar .menu .item ul .item a {
+  height: 30px;
+  line-height: 30px;
+  padding-left: 50px;
+  background: #fff;
+}
+#eevee-layout #eevee-sidebar .menu .item ul .item.active a {
+  background: #F4F4F4;
+}

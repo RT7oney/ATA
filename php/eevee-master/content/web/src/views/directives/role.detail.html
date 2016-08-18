@@ -1,0 +1,130 @@
+<div id="directive-role-detail" class="view slide">
+
+    <div class="view title ui secondary menu">
+        <div class="item">
+            角色详情
+        </div>
+
+        <div class="right menu">
+
+            <div class="item label">
+                <i class="icon  write" ng-click="openRoleEditor(role.id)"></i>
+            </div>
+
+            <div class="item label">
+                <i class="icon share" ng-click="closeUserDetailView()"></i>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="view content">
+        <div class="block">
+            <!--<div id="tab" class="ui grid">-->
+            <!--<div class="ui secondary vertical pointing menu">-->
+            <!--<a class="active item">-->
+            <!--资料-->
+            <!--</a>-->
+            <!--<a class="item">-->
+            <!--统计-->
+            <!--</a>-->
+            <!--<a class="item">-->
+            <!--日志-->
+            <!--</a>-->
+            <!--</div>-->
+
+            <!--<div class="twelve wide stretched column">-->
+
+            <!---->
+            <!--</div>-->
+            <!--</div>-->
+            <table class="ui definition small table">
+                <tbody>
+                <tr>
+                    <td>角色名</td>
+                    <td>{{ role.name }}</td>
+                </tr>
+                <tr>
+                    <td>状态</td>
+                    <td>{{ role.status }}</td>
+                </tr>
+                <tr>
+                    <td>描述</td>
+                    <td>{{ role.description || '-' }}</td>
+                </tr>
+                <tr>
+                    <td>权限数</td>
+                    <td>{{ role.permission_amount }}</td>
+                </tr>
+                <tr>
+                    <td>用户数</td>
+                    <td>{{ role.user_amount }}</td>
+                </tr>
+                <tr>
+                    <td>来源</td>
+                    <td>{{ role.source }}</td>
+                </tr>
+                <tr>
+                    <td>创建时间</td>
+                    <td>{{ role.created_at }}</td>
+                </tr>
+                <tr>
+                    <td>最近更新时间</td>
+                    <td>{{ role.updated_at }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h4 class="ui horizontal divider header">拥有权限</h4>
+
+            <div ng-hide="loadPermissionsDone" class="ui active centered small inline loader"></div>
+
+
+            <p id="no-permissions" ng-hide="hasPermissions">无分配权限</p>
+
+            <div ng-show="loadPermissionsDone" ng-repeat="(index,item) in permissions">
+                <h4 class="ui horizontal divider header"></h4>
+
+                <table class="ui definition table">
+                    <tr>
+                        <td>资源名称</td>
+                        <td>{{ item.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>资源描述</td>
+                        <td>{{ item.description || '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td>分配权限</td>
+                        <td class="permissions wrap">
+                            <table class="ui celled small table permissions">
+
+                                <thead>
+                                <tr>
+                                    <th>权限名</th>
+                                    <th>标识符</th>
+                                    <th>描述</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr ng-repeat="permission in item.permissions" class="warning">
+                                    <td>{{ permission.name }}</td>
+                                    <td>{{ permission.id }}</td>
+                                    <td>{{permission.description || '-' }}</td>
+                                </tr>
+                                </tbody>
+
+
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+
+            </div>
+
+        </div>
+    </div>
+
+</div>

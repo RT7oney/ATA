@@ -1,0 +1,23 @@
+#app-user img.avatar {
+  border-radius: 3px;
+  max-width: 25px;
+  max-height: 25px;
+}
+#app-user > table th {
+  padding: 7px 10px;
+}
+#app-user > table th .icon {
+  visibility: hidden;
+}
+#app-user > table th:hover .icon {
+  visibility: visible;
+}
+#app-user > table .col-check {
+  width: 20px;
+}
+#app-user > table .col-avatar {
+  width: 50px;
+}
+#app-user > table .col-role {
+  width: 10%;
+}
