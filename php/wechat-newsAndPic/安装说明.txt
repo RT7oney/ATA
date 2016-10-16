@@ -1,8 +1,0 @@
-
-1、导入 bjqv5.sql 数据库文件
-
-2、修改 conn.php 数据库配置信息
-
-3、后台地址 http://你的域名/admin/login.html   用户名：admin  密码：a
-
-

@@ -1,9 +1,0 @@
-#app-config-site > form {
-  padding: 0 15px;
-}
-#app-config-site > form td:first-child {
-  width: 150px;
-}
-#app-config-site > form td {
-  padding: 10px 0;
-}

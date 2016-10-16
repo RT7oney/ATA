@@ -1,3 +1,0 @@
-伪静态开启
-
-在Apache下可以开启rewrite 可以吧.htaccess文件复制到根目录下 在后台开启伪静态
