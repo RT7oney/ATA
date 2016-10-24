@@ -8,7 +8,7 @@ AshToArt
 * wechat使用js语言node.js+mongoDB开发，分配端口7070
 * admin使用python，分配端口80
 
-###2016.09.03
+##2016.09.03
 * 有关于php异步操作的东西:
 > 有数据持久化支持（就是把队列保存到数据库介质中，那故障恢复也好做），有群集支持（其实很多××MQ都有这些功能）。PECL上有扩展，也有纯PHP实现扩展。反正这个Gearman也活了很久了，杂七杂八的问题都基本上解决了。
 * 什么是worker:
@@ -206,7 +206,7 @@ d.在多线程OS中，进程不是一个可执行的实体。
 <!---->
 	clear属性-常用clear:both;(对紧邻的元素管用)
 	同时设置width:100%;overflow:hidden
-### 2016.09.06
+## 2016.09.06
 * HTTP、WebSocket 等协议都是处于 OSI 模型的最高层： 应用层 。而 IP 协议工作在网络层（第3层），TCP 协议工作在传输层（第4层）。
 * Socket是应用层与TCP/IP协议族通信的中间软件抽象层，它是一组接口。在设计模式中，Socket其实就是一个门面模式，它把复杂的TCP/IP协议族隐藏在Socket接口后面，对用户来说，一组简单的接口就是全部，让Socket去组织数据，以符合指定的协议。
 * vue.js 入门
@@ -324,12 +324,12 @@ d.在多线程OS中，进程不是一个可执行的实体。
 	
 	父$broadcast
 	子events
-###2016.09.11
+##2016.09.11
 * socket多线程的主要逻辑整理
 	
 	第一步首先需要去循环调用accept来监听客户端的请求，然后服务端接受客户端的socket，并且特别注意是<font color=red>服务端创立一个专门的socket来处理这个客户端的socket</font>
 
-###2016.09.12
+##2016.09.12
 * 进程之间的通信，线程之间的通信
 * hadoop spark
 * memercache和redis
@@ -378,7 +378,7 @@ d.在多线程OS中，进程不是一个可执行的实体。
 	parse_str(file_get_contents('php://input'), $data);
 	$data = array_merge($_GET, $_POST, $data);
 	//根据 $type 的值做相应的操作
-###2016.09.15
+##2016.09.15
 * 数据库
 
 	当使用group by 并且带着 having子句的时候，我们需要保证两个条件，1.having后面应该为一个聚合函数（count avg  max min sum）。2.having后面的待条件的字段需要出现在我们select后面的字段
@@ -430,7 +430,7 @@ d.在多线程OS中，进程不是一个可执行的实体。
 	<img src="img/func one.jpeg" style="width:350px">
 	
 	<img src="img/func two.jpeg" style="width:350px">
-###2016.09.17
+##2016.09.17
 * php 多线程，处理一个异步操作的任务
 
 	希望在Web这边获取一种方式，来执行一个长达数小时的“异步”任务。就PHP而言，可以用2种方式来做：
@@ -692,7 +692,7 @@ PHP闭包的特性并没有太大惊喜，其实用CLASS就可以实现类似甚
 	<img src="img/window.jpg" style="width:350px">
 	<img src="img/getby.jpg" style="width:350px">
 	<img src="img/timer.jpg" style="width:350px">
-###2016.09.19
+##2016.09.19
 * new Object()和Object.create()的区别
 <!--lang:javascript-->
 	// Demo
@@ -725,4 +725,225 @@ PHP闭包的特性并没有太大惊喜，其实用CLASS就可以实现类似甚
 
 <img src="img/dective.jpeg" style="width:350px">
 <img src="img/dective2.jpeg" style="width:350px">
+
+
+##2016.10.17
+###sql之left join、right join、inner join的区别
+
+left join(左联接) 返回包括左表中的所有记录和右表中联结字段相等的记录 
+right join(右联接) 返回包括右表中的所有记录和左表中联结字段相等的记录
+inner join(等值连接) 只返回两个表中联结字段相等的行
+
+* 举例如下：
+
+表A记录如下：
+aID　　　　　aNum
+1　　　　　a20050111
+2　　　　　a20050112
+3　　　　　a20050113
+4　　　　　a20050114
+5　　　　　a20050115
+
+表B记录如下:
+bID　　　　　bName
+1　　　　　2006032401
+2　　　　　2006032402
+3　　　　　2006032403
+4　　　　　2006032404
+8　　　　　2006032408
+
+-
+
+* 1.left join
+sql语句如下: 
+select * from A
+left join B 
+on A.aID = B.bID
+
+结果如下:
+aID　　　　　aNum　　　　　bID　　　　　bName
+1　　　　　a20050111　　　　1　　　　　2006032401
+2　　　　　a20050112　　　　2　　　　　2006032402
+3　　　　　a20050113　　　　3　　　　　2006032403
+4　　　　　a20050114　　　　4　　　　　2006032404
+5　　　　　a20050115　　　　NULL　　　　　NULL
+
+（所影响的行数为 5 行）
+结果说明:
+left join是以A表的记录为基础的,A可以看成左表,B可以看成右表,left join是以左表为准的.
+换句话说,左表(A)的记录将会全部表示出来,而右表(B)只会显示符合搜索条件的记录(例子中为: A.aID = B.bID).
+
+B表记录不足的地方均为NULL.
+
+-
+
+* 2.right join
+sql语句如下: 
+select * from A
+right join B 
+on A.aID = B.bID
+
+结果如下:
+aID　　　　　aNum　　　　　bID　　　　　bName
+1　　　　　a20050111　　　　1　　　　　2006032401
+2　　　　　a20050112　　　　2　　　　　2006032402
+3　　　　　a20050113　　　　3　　　　　2006032403
+4　　　　　a20050114　　　　4　　　　　2006032404
+NULL　　　　　NULL　　　　　8　　　　　2006032408
+
+（所影响的行数为 5 行）
+结果说明:
+仔细观察一下,就会发现,和left join的结果刚好相反,这次是以右表(B)为基础的,A表不足的地方用NULL填充.
+
+-
+
+* 3.inner join
+
+sql语句如下: 
+select * from A
+innerjoin B 
+on A.aID = B.bID
+
+结果如下:
+aID　　　　　aNum　　　　　bID　　　　　bName
+1　　　　　a20050111　　　　1　　　　　2006032401
+2　　　　　a20050112　　　　2　　　　　2006032402
+3　　　　　a20050113　　　　3　　　　　2006032403
+4　　　　　a20050114　　　　4　　　　　2006032404
+
+结果说明:
+很明显,这里只显示出了 A.aID = B.bID的记录.这说明inner join并不以谁为基础,它只显示符合条件的记录.
+
+-
+注: 
+LEFT JOIN操作用于在任何的 FROM 子句中，组合来源表的记录。使用 LEFT JOIN 运算来创建一个左边外部联接。左边外部联接将包含了从第一个（左边）开始的两个表中的全部记录，即使在第二个（右边）表中并没有相符值的记录。
+
+语法：FROM table1 LEFT JOIN table2 ON table1.field1 compopr table2.field2
+
+说明：table1, table2参数用于指定要将记录组合的表的名称。
+field1, field2参数指定被联接的字段的名称。且这些字段必须有相同的数据类型及包含相同类型的数据，但它们不需要有相同的名称。
+compopr参数指定关系比较运算符："="， "<"， ">"， "<="， ">=" 或 "<>"。
+如果在INNER JOIN操作中要联接包含Memo 数据类型或 OLE Object 数据类型数据的字段，将会发生错误. 	
+
+##2016.10.18
+* mysql 数据库索引优化
+
+```sql
+SELECT * FROM payment WHERE staff_id = 2 AND customer_id = 584;
+```
+由于customer\_id的离散度更大，所以应该使用index(customer\_id,staff\_id)
+需要查询字段的离散程度，离散度越大的列应该放在联合索引的前面
+
+```sql
+select count (distinct customer_id),count (distinct staff_id) from 
+```
+某一列的唯一值越多，说明其离散程度越好，可选择性更好
+
+
+*注意：索引会影响写入效率
+
+
+* php安装扩展
+
+以前以为php的扩展要重新编译php，今天在群友的指点下知道可以像apache模块一样动态扩展，以mcrypt举例。
+进入要安装的扩展的源码目录
+
+	cd /root/php-5.2.6/ext/mcrypt
 	
+运行
+
+	phpize
+	
+	Configuring for:
+	PHP Api Version:         20041225
+	Zend Module Api No:      20060613
+	Zend Extension Api No:   220060519
+ 
+出现这样的提示说明可以扩展。
+ 
+然后编译安装
+	
+	./configure --with-php-config=/usr/local/php5/bin/php-config 
+	make
+	make install
+=	
+	/usr/local/php5/lib/php/extensions/no-debug-non-zts-20060613/
+记住这里提示的路径刚才编译的module就在这里
+
+	cd /usr/local/php5/lib/php/extensions/no-debug-non-zts-20060613/
+	no-debug-non-zts-20060613 $ls
+
+	eaccelerator.so  mcrypt.so  memcache.so
+
+然后编辑php.ini（如果php安装在/usr/local/php5 则php.ini在/usr/local/php5/lib/php.ini中添加
+
+	extension_dir = "/usr/local/php5/lib/php/extensions/no-debug-non-zts-20060613/"
+	extension = "mcrypt.so"
+
+然后重启apache，然后再访问phpinfo.php 就看到支持mcrypt了。
+
+##2016.10.20
+###mac 一般使用bash作为默认shell
+
+Mac系统的环境变量，加载顺序为：
+
+	/etc/profile 
+	/etc/paths 
+	~/.bash_profile 
+	~/.bash_login 
+	~/.profile 
+	~/.bashrc
+
+当然/etc/profile和/etc/paths是系统级别的，系统启动就会加载，后面几个是当前用户级的环境变量。后面3个按照从前往后的顺序读取，如果~/.bash_profile文件存在，则后面的几个文件就会被忽略不读了，如果~/.bash_profile文件不存在，才会以此类推读取后面的文件。~/.bashrc没有上述规则，它是bash shell打开的时候载入的。
+
+如果没特殊说明,设置PATH的语法都为：
+
+     export PATH=$PATH:<PATH 1>:<PATH 2>:<PATH 3>:------:<PATH N>
+
+（一）全局设置
+下面的几个文件设置是全局的，修改时需要root权限
+
+1）/etc/paths （全局建议修改这个文件 ）
+编辑 paths，将环境变量添加到 paths文件中 ，一行一个路径
+Hint：输入环境变量时，不用一个一个地输入，只要拖动文件夹到 Terminal 里就可以了。
+
+2）/etc/profile （建议不修改这个文件 ）
+全局（公有）配置，不管是哪个用户，登录时都会读取该文件。
+
+3）/etc/bashrc （一般在这个文件中添加系统级环境变量）
+全局（公有）配置，bash shell执行时，不管是何种方式，都会读取此文件。
+
+4）
+1.创建一个文件：
+
+	sudo touch /etc/paths.d/mysql
+2.用 vim 打开这个文件（如果是以 open -t 的方式打开，则不允许编辑）：
+
+	sudo vim /etc/paths.d/mysql
+3.编辑该文件，键入路径并保存（关闭该 Terminal 窗口并重新打开一个，就能使用 mysql 命令了）
+
+	/usr/local/mysql/bin
+据说，这样可以自己生成新的文件，不用把变量全都放到 paths 一个文件里，方便管理。
+
+（二）单个用户设置
+
+	1）~/.bash_profile （任意一个文件中添加用户级环境变量）
+（注：Linux 里面是 .bashrc 而 Mac 是 .bash_profile）
+若bash shell是以login方式执行时，才会读取此文件。该文件仅仅执行一次!默认情况下,他设置一些环境变量
+设置命令别名
+	
+	alias ll=’ls -la’
+设置环境变量：
+
+	export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+2）~/.bashrc 同上
+
+如果想立刻生效，则可执行下面的语句：
+	
+	$ source 相应的文件
+一般环境变量更改后，重启后生效。
+##2016.10.21
+###使用php多进程和IPC以及异步操作的研究
+* php进程间通信使用的是消息队列或者信号量与内存共享
+
+<font style="color:red">消息队列</font>使用设计模式中的消费者生产者模式，然后使用fork出一个子进程，然后生成出的子进程，先产生生产者进程，然后去产生消费者进程，生产者进程往进程中增加一些消息，通过msg\_send 方法，可以实现将需要传递的数据线扔到缓存中，然后产生消费者进程通过msg\_receive 实现从缓存中读取数据的方法；关于<font style="color:red">共享内存</font>，应该是最快速的ipc，它的主要实现原理是映射一段能被其他进程所访问到的内存，这段内存由一个进程创建，多进程都可以访问
