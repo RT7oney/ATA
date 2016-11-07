@@ -949,3 +949,400 @@ Hint：输入环境变量时，不用一个一个地输入，只要拖动文件�
 <font style="color:red">消息队列</font>使用设计模式中的消费者生产者模式，然后使用fork出一个子进程，然后生成出的子进程，先产生生产者进程，然后去产生消费者进程，生产者进程往进程中增加一些消息，通过msg\_send 方法，可以实现将需要传递的数据线扔到缓存中，然后产生消费者进程通过msg\_receive 实现从缓存中读取数据的方法；关于<font style="color:red">共享内存</font>，应该是最快速的ipc，它的主要实现原理是映射一段能被其他进程所访问到的内存，这段内存由一个进程创建，多进程都可以访问
 
 php的异步操作所使用的方案是gearman或者yield关键字，目前在为PHP安装gearman扩展的过程中出现的问题是缺少boost，boost现在在brew install 一键安装的时候，出现了问题报错目前未解决，不过现在已经拥有了gearman的源码包，并且workerman和swoole都纷纷使用了gearman
+
+##2016.10.24
+###laravel中的容器和请求实例
+首先Laravel框架捕获到用户发到public\index.php的请求，生成Illuminate\Http\Request实例，传递给这个小小的handle方法。在方法内部，将该<font color="red">$request实例绑定到第二步生成的$app容器上</font>。让后在该请求真正处理之前，调用bootstrap方法，进行必要的加载和注册，如检测环境，加载配置，注册Facades（假象），注册服务提供者，启动服务提供者等等。
+
+* 服务容器
+
+服务容器就是一个普通的容器，用来装类的实例，然后在需要的时候再取出来。用更专业的术语来说是服务容器实现了控制反转（Inversion of Control，缩写为IoC），意思是正常情况下类A需要一个类B的时候，我们需要自己去new类B，意味着我们必须知道类B的更多细节，比如构造函数，随着项目的复杂性增大，这种依赖是毁灭性的。控制反转的意思就是，将类A主动获取类B的过程颠倒过来变成被动，类A只需要声明它需要什么，然后由容器提供。
+
+* 事件绑定
+
+* 依赖注入
+
+传统的思路是应用程序用到一个Foo类，就会创建Foo类并调用Foo类的方法，假如这个方法内需要一个Bar类，就会创建Bar类并调用Bar类的方法，而这个方法内需要一个Bim类，就会创建Bim类，接着做些其它工作。
+
+```php
+	// 代码【1】
+    class Bim
+    {
+        public function doSomething()
+        {
+            echo __METHOD__, '|';
+        }
+    }
+    
+    class Bar
+    {
+        public function doSomething()
+        {
+            $bim = new Bim();
+            $bim->doSomething();
+            echo __METHOD__, '|';
+        }
+    }
+    
+    class Foo
+    {
+        public function doSomething()
+        {
+            $bar = new Bar();
+            $bar->doSomething();
+            echo __METHOD__;
+        }
+    }
+    
+    $foo = new Foo();
+    $foo->doSomething(); //Bim::doSomething|Bar::doSomething|Foo::doSomething
+```
+
+使用依赖注入的思路是应用程序用到Foo类，Foo类需要Bar类，Bar类需要Bim类，那么先创建Bim类，再创建Bar类并把Bim注入，再创建Foo类，并把Bar类注入，再调用Foo方法，Foo调用Bar方法，接着做些其它工作。
+
+```php
+	// 代码【2】
+    class Bim
+    {
+        public function doSomething()
+        {
+            echo __METHOD__, '|';
+        }
+    }
+    
+    class Bar
+    {
+        private $bim;
+    
+        public function __construct(Bim $bim)
+        {
+            $this->bim = $bim;
+        }
+    
+        public function doSomething()
+        {
+            $this->bim->doSomething();
+            echo __METHOD__, '|';
+        }
+    }
+    
+    class Foo
+    {
+        private $bar;
+    
+        public function __construct(Bar $bar)
+        {
+            $this->bar = $bar;
+        }
+    
+        public function doSomething()
+        {
+            $this->bar->doSomething();
+            echo __METHOD__;
+        }
+    }
+    
+    $foo = new Foo(new Bar(new Bim()));
+    $foo->doSomething(); // Bim::doSomething|Bar::doSomething|Foo::doSomething
+```
+
+这就是控制反转模式。依赖关系的控制反转到调用链的起点。这样你可以完全控制依赖关系，通过调整不同的注入对象，来控制程序的行为。例如Foo类用到了memcache，可以在不修改Foo类代码的情况下，改用redis。
+
+使用依赖注入容器后的思路是应用程序需要到Foo类，就从容器内取得Foo类，容器创建Bim类，再创建Bar类并把Bim注入，再创建Foo类，并把Bar注入，应用程序调用Foo方法，Foo调用Bar方法，接着做些其它工作.
+
+总之容器负责实例化，注入依赖，处理依赖关系等工作。
+
+* 代码演示
+
+```php
+	class Container
+    {
+        private $s = array();
+    
+        function __set($k, $c)
+        {
+            $this->s[$k] = $c;
+        }
+    
+        function __get($k)
+        {
+            return $this->s[$k]($this);
+        }
+    }
+```
+
+这段代码使用了魔术方法，在给不可访问属性赋值时，__set() 会被调用。读取不可访问属性的值时，__get() 会被调用。
+
+```php
+	$c = new Container();
+    
+    $c->bim = function () {
+        return new Bim();
+    };
+    $c->bar = function ($c) {
+        return new Bar($c->bim);
+    };
+    $c->foo = function ($c) {
+        return new Foo($c->bar);
+    };
+    
+    // 从容器中取得Foo
+    $foo = $c->foo;
+    $foo->doSomething(); // Bim::doSomething|Bar::doSomething|Foo::doSomething
+```
+这段代码使用了匿名函数
+
+再来一段简单的代码演示一下
+
+```php
+ class IoC
+    {
+        protected static $registry = [];
+    
+        public static function bind($name, Callable $resolver)
+        {
+            static::$registry[$name] = $resolver;
+        }
+    
+        public static function make($name)
+        {
+            if (isset(static::$registry[$name])) {
+                $resolver = static::$registry[$name];
+                return $resolver();
+            }
+            throw new Exception('Alias does not exist in the IoC registry.');
+        }
+    }
+    
+    IoC::bind('bim', function () {
+        return new Bim();
+    });
+    IoC::bind('bar', function () {
+        return new Bar(IoC::make('bim'));
+    });
+    IoC::bind('foo', function () {
+        return new Foo(IoC::make('bar'));
+    });
+    
+    
+    // 从容器中取得Foo
+    $foo = IoC::make('foo');
+    $foo->doSomething(); // Bim::doSomething|Bar::doSomething|Foo::doSomething
+```
+
+这段代码使用了后期静态绑定
+
+* 依赖注入容器的高级功能
+
+1.自动绑定或者自动解析
+2.注释解析器
+3.延迟注入
+
+```php
+class Bim
+    {
+        public function doSomething()
+        {
+            echo __METHOD__, '|';
+        }
+    }
+    
+    class Bar
+    {
+        private $bim;
+    
+        public function __construct(Bim $bim)
+        {
+            $this->bim = $bim;
+        }
+    
+        public function doSomething()
+        {
+            $this->bim->doSomething();
+            echo __METHOD__, '|';
+        }
+    }
+    
+    class Foo
+    {
+        private $bar;
+    
+        public function __construct(Bar $bar)
+        {
+            $this->bar = $bar;
+        }
+    
+        public function doSomething()
+        {
+            $this->bar->doSomething();
+            echo __METHOD__;
+        }
+    }
+    
+    class Container
+    {
+        private $s = array();
+    
+        public function __set($k, $c)
+        {
+            $this->s[$k] = $c;
+        }
+    
+        public function __get($k)
+        {
+            // return $this->s[$k]($this);
+            return $this->build($this->s[$k]);
+        }
+    
+        /**
+         * 自动绑定（Autowiring）自动解析（Automatic Resolution）
+         *
+         * @param string $className
+         * @return object
+         * @throws Exception
+         */
+        public function build($className)
+        {
+            // 如果是匿名函数（Anonymous functions），也叫闭包函数（closures）
+            if ($className instanceof Closure) {
+                // 执行闭包函数，并将结果
+                return $className($this);
+            }
+    
+            /** @var ReflectionClass $reflector */
+            $reflector = new ReflectionClass($className);
+    
+            // 检查类是否可实例化, 排除抽象类abstract和对象接口interface
+            if (!$reflector->isInstantiable()) {
+                throw new Exception("Can't instantiate this.");
+            }
+    
+            /** @var ReflectionMethod $constructor 获取类的构造函数 */
+            $constructor = $reflector->getConstructor();
+    
+            // 若无构造函数，直接实例化并返回
+            if (is_null($constructor)) {
+                return new $className;
+            }
+    
+            // 取构造函数参数,通过 ReflectionParameter 数组返回参数列表
+            $parameters = $constructor->getParameters();
+    
+            // 递归解析构造函数的参数
+            $dependencies = $this->getDependencies($parameters);
+    
+            // 创建一个类的新实例，给出的参数将传递到类的构造函数。
+            return $reflector->newInstanceArgs($dependencies);
+        }
+    
+        /**
+         * @param array $parameters
+         * @return array
+         * @throws Exception
+         */
+        public function getDependencies($parameters)
+        {
+            $dependencies = [];
+    
+            /** @var ReflectionParameter $parameter */
+            foreach ($parameters as $parameter) {
+                /** @var ReflectionClass $dependency */
+                $dependency = $parameter->getClass();
+    
+                if (is_null($dependency)) {
+                    // 是变量,有默认值则设置默认值
+                    $dependencies[] = $this->resolveNonClass($parameter);
+                } else {
+                    // 是一个类，递归解析
+                    $dependencies[] = $this->build($dependency->name);
+                }
+            }
+    
+            return $dependencies;
+        }
+    
+        /**
+         * @param ReflectionParameter $parameter
+         * @return mixed
+         * @throws Exception
+         */
+        public function resolveNonClass($parameter)
+        {
+            // 有默认值则返回默认值
+            if ($parameter->isDefaultValueAvailable()) {
+                return $parameter->getDefaultValue();
+            }
+    
+            throw new Exception('I have no idea what to do here.');
+        }
+    }
+    
+    // ----
+    $c = new Container();
+    $c->bar = 'Bar';
+    $c->foo = function ($c) {
+        return new Foo($c->bar);
+    };
+    // 从容器中取得Foo
+    $foo = $c->foo;
+    $foo->doSomething(); // Bim::doSomething|Bar::doSomething|Foo::doSomething
+    
+    // ----
+    $di = new Container();
+    
+    $di->foo = 'Foo';
+    
+    /** @var Foo $foo */
+    $foo = $di->foo;
+    
+    var_dump($foo);
+    /*
+    Foo#10 (1) {
+      private $bar =>
+      class Bar#14 (1) {
+        private $bim =>
+        class Bim#16 (0) {
+        }
+      }
+    }
+    */
+    
+    $foo->doSomething(); // Bim::doSomething|Bar::doSomething|Foo::doSomething
+```
+以上代码的原理参考PHP官方文档：反射，PHP 5 具有完整的反射 API，添加了对类、接口、函数、方法和扩展进行反向工程的能力。 此外，反射 API 提供了方法来取出函数、类和方法中的文档注释。
+
+若想进一步提供一个数组访问接口，如$di->foo可以写成$di'foo']，则需用到[ArrayAccess（数组式访问）接口 。
+
+一些复杂的容器会有许多特性，下面列出一些相关的github项目，欢迎补充。
+
+##2016.11.2
+###安装php7 mongoDB扩展
+
+* 如果在php/bin目录下有pecl install 那么可以一键安装pecl install mongodb
+
+* 如果没有，那么你需要源码编译安装
+	
+	首先你需要在[mongodb-php扩展](https://pecl.php.net/package/mongodb)下载一个mongodb的源码包
+	
+	然后
+	
+		tar -zxvf mongodb-xxx.tgz
+    	cd mongodb-xxx
+    	phpize
+    	./configure --with-php-config=/xxx/php-config --with-openssl-dir = /usr/local/Cellar/openssl/xxxx
+    	make && make install
+    最后，在php.ini中加入扩展extension=mongodb.so，可以使用php -i|grep php.ini来定位到php.ini绝对路径
+
+###mongoDB 中的 capped collections
+Capped collections 就是固定大小的collection。
+它有很高的性能以及队列过期的特性(过期按照插入的顺序). 有点和 "RRD" 概念类似。
+Capped collections是高性能自动的维护对象的插入顺序。它非常适合类似记录日志的功能 和标准的collection不同，你必须要显式的创建一个capped collection， 指定一个collection的大小，单位是字节。collection的数据存储空间值提前分配的。
+要注意的是指定的存储大小包含了数据库的头信息。
+
+	db.createCollection("mycoll", {capped:true, size:100000})
+
+* 在capped collection中，你能添加新的对象。
+* 能进行更新，然而，对象不会增加存储空间。如果增加，更新就会失败 。
+* 数据库不允许进行删除。使用drop()方法删除collection所有的行。
+* 注意: 删除之后，你必须显式的重新创建这个collection。
+在32bit机器中，capped collection最大存储为1e9( 1X109)个字节。
