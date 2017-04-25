@@ -1502,7 +1502,7 @@ func httpDo() {
 
 1、lpush [lpush key valus...]  类似于压栈操作，将元素放入头部
 
-复制代码
+```ssh
 127.0.0.1:6379> lpush plist ch0 ch1 ch2
 (integer) 3
 127.0.0.1:6379> lrange plist 0 3
@@ -1516,10 +1516,11 @@ func httpDo() {
 2) "ch2"
 3) "ch1"
 4) "ch0"
-复制代码
+```
+
 2 、lpushx [lpushx key valus]:只能插入已经存在的key,且一次只能插入一次
 
-复制代码
+```ssh
 127.0.0.1:6379> lpushx pl ch
 (integer) 0
 127.0.0.1:6379> lpushx plist ch5 ch6
@@ -1532,10 +1533,11 @@ func httpDo() {
 3) "ch2"
 4) "ch1"
 5) "ch0"
-复制代码
+```
+
 3、rpush  [rpush key valus...] ：将元素push在list的尾部
 
-复制代码
+```ssh
 127.0.0.1:6379> rpush plist ch6
 (integer) 6
 127.0.0.1:6379> lrange plist 0 6
@@ -1556,12 +1558,13 @@ func httpDo() {
 6) "ch6"
 7) "ch7"
 8) "ch8"
-复制代码
+```
+
 4、rpushx [rpushx key valus...] :相对于lpushx
 
 5、linsert [linsert key before/after pivot value]:将值插入到pivot的前面或后面。返回列表元素个数。如果参照点pivot不存在不插入。如果有多个pivot，以离表头最近的为准
 
-复制代码
+```ssh
 127.0.0.1:6379> linsert plist before ch1 chi
 (integer) 9
 127.0.0.1:6379> lrange plist 0 9
@@ -1589,15 +1592,15 @@ func httpDo() {
  8) "ch6"
  9) "ch7"
 10) "ch8"
-复制代码
 //以上插入操作均是返回list的长度
- 
+```
+
 
 二、删除
 
 1、lpop 、rpop：分别为删除头部和尾部，返回被删除的元素
 
-复制代码
+```ssh
 127.0.0.1:6379> lpop plist
 "ch5"
 127.0.0.1:6379> lrange plist 0 10
@@ -1621,10 +1624,11 @@ func httpDo() {
 6) "ch0"
 7) "ch6"
 8) "ch7"
-复制代码
+```
+
 2 、ltrim [ltrim key  range_l range_r]:保留区域类的元素，其他的删除
 
-复制代码
+```ssh
 127.0.0.1:6379> ltrim plist 0 3
 OK
 127.0.0.1:6379> lrange plist 0 10
@@ -1632,12 +1636,13 @@ OK
 2) "ch2"
 3) "chi"
 4) "cha"
-复制代码
+```
+
 3、lrem [lrem key count value] :移除等于value的元素，当count>0时，从表头开始查找，移除count个；当count=0时，从表头开始查找，移除所有等于value的；当count<0时，从表尾开始查找，移除|count| 个。
 
-　　cout >0
+cout >0
 
-复制代码
+```ssh
 127.0.0.1:6379> lrange plist 0 10
  1) "ch0"
  2) "ch0"
@@ -1657,10 +1662,11 @@ OK
 3) "cha"
 4) "ch0"
 5) "ch0"
-复制代码
-　　count <0
+```
 
-复制代码
+count <0
+
+```ssh
 127.0.0.1:6379> lrange plist 0 10
  1) "ch0"
  2) "ch9"
@@ -1680,11 +1686,12 @@ OK
 3) "ch4"
 4) "chi"
 5) "cha"
-复制代码
+```
+
 三、修改
 lset [lset key index value] : 设置列表指定索引的值，如果指定索引不存在则报错
 
-复制代码
+```ssh
 127.0.0.1:6379> lset plist 0 ch2
 OK
 127.0.0.1:6379> lrange plist 0 10
@@ -1693,11 +1700,12 @@ OK
 3) "ch4"
 4) "chi"
 5) "cha"
-复制代码
+```
+
 四、查询
 1、lindex [lindex key index]:通过索引index获取列表的元素、key>=0从头到尾，key<0从尾到头
 
-复制代码
+```ssh
 127.0.0.1:6379> lrange plist 0 10
 1) "ch2"
 2) "ch9"
@@ -1712,5 +1720,294 @@ OK
 "cha"
 127.0.0.1:6379> lindex plist 5
 (nil)
-复制代码
+```
+
 2、lrange [lrange key range_l range_r]:0 表头、-1表尾
+
+## 2017.04.10
+### go语言redis redigo
+
+* redis操作：
+ 
+```golang
+// tcp连接redis
+ 
+  rs, err := redis.Dial("tcp", host)
+ 
+  // 操作完后自动关闭 
+ 
+  defer rs.Close()
+ 
+ // 操作redis时调用Do方法，第一个参数传入操作名称（字符串），然后根据不同操作传入key、value、数字等
+ // 返回2个参数，第一个为操作标识，成功则为1，失败则为0；第二个为错误信息
+ value, err := redis.String(rs.Do("GET", key))
+ if err != nil {
+    fmt.Println("fail")
+ }
+ 
+ 若value的类型为int，则用redis.Int转换
+ 
+ 若value的类型为string，则用redis.String转换
+ 
+ 若value的类型为json，则用redis.Byte转换
+ 
+ // 存json数据
+ key := "aaa"
+ imap := map[string]string{"key1": "111", "key2": "222"}
+ // 将map转换成json数据
+ value, _ := json.Marshal(imap)
+ // 存入redis
+ n, err := rs.Do("SETNX", key, value)
+ if err != nil {
+     fmt.Println(err)
+ }
+ if n == int64(1) {
+     fmt.Println("success")
+ }
+// 取json数据
+// 先声明imap用来装数据
+var imap map[string]string
+key := "aaa"<br>// json数据在go中是[]byte类型，所以此处用redis.Bytes转换
+value, err := redis.Bytes(rs.Do("GET", key))
+if err != nil {
+    fmt.Println(err)
+}
+// 将json解析成map类型
+errShal := json.Unmarshal(value, &imap)
+if errShal != nil {
+    fmt.Println(err)
+}
+fmt.Println(imap["key1"])
+fmt.Println(imap["key2"])
+```
+
+* 一个订阅发布功能
+
+```golang
+package models
+
+import (
+    "github.com/garyburd/redigo/redis"
+    "github.com/astaxie/beego"
+    "time"
+    "fmt"
+)
+
+var (
+    //定义常亮
+    RedisClient *redis.Pool
+    REDIS_HOST string
+    REDIS_PORT string
+    REDIS_DB int
+)
+
+func init() {
+    //从配置文件中获取redis的ip以及db
+    REDIS_HOST = beego.AppConfig.String("redis_host")
+    REDIS_PORT = beego.AppConfig.String("redis_port")
+    REDIS_DB = beego.AppConfig.DefaultInt("redis_db", 0)
+    // 建立连接池
+    RedisClient = &redis.Pool{
+        // 从配置文件获取maxidle以及maxactive，取不到则用后面的默认值
+        MaxIdle:     beego.AppConfig.DefaultInt("redis_maxidle", 100),
+        MaxActive:   beego.AppConfig.DefaultInt("redis_maxactive", 1024),
+        IdleTimeout: 180 * time.Second,
+        Dial: func() (redis.Conn, error) {
+            c, err := redis.Dial("tcp", REDIS_HOST+":"+REDIS_PORT)
+            if err != nil {
+                return nil, err
+            }
+            // 选择db
+            //c.Do("SELECT", REDIS_DB)
+            return c, nil
+        },
+    }
+}
+
+/**
+ *redis订阅信息
+ *
+ */
+func Subscribe() {
+    c := RedisClient.Get()
+    psc := redis.PubSubConn{c}
+    psc.Subscribe("redChatRoom")
+
+    defer func() {
+        c.Close()
+        psc.Unsubscribe("redChatRoom")　　//取消订阅
+    } ()
+    for {
+        switch v := psc.Receive().(type) {
+        case redis.Message:
+            fmt.Printf("%s: messages: %s\n", v.Channel, v.Data)
+        case redis.Subscription:
+            //fmt.Printf("%s: %s %d\n", v.Channel, v.Kind, v.Count)
+            continue
+        case error:
+            fmt.Println(v)
+            return
+        }
+    }
+}
+
+/**
+ *redis发布信息
+ *
+ */
+func Pubscribe(s string) {
+    c := RedisClient.Get()
+    defer c.Close()
+
+    _, err := c.Do("PUBLISH", "redChatRoom", s)
+    if err != nil {
+        fmt.Println("pub err: ", err)
+        return
+    }
+}
+
+func test() {
+    // 从池里获取连接
+    rc := RedisClient.Get()
+    // 用完后将连接放回连接池
+    defer rc.Close()
+    //rc.Do()
+    //n, _ := rc.Do("EXPIRE", key, 24*3600)  
+    //value, err := redis.String(rs.Do("GET", key))
+    return
+}
+```
+
+## 2017.04.15
+### go语言redigo存储struct的几个例子
+
+* 例子1
+
+```golang
+package main
+
+import (
+    "github.com/garyburd/redigo/redis"
+    "log"
+)
+
+func main() {
+    conn, err := redis.Dial("tcp", ":6379")
+    if err != nil {
+        log.Fatalf("Couldn't connect to Redis: %v\n", err)
+    }
+    defer conn.Close()
+
+    stockData := map[string]map[string]string{
+        "GOOG": {"company_name": "Google Inc.", "open_price": "803.99", "ask_price": "795.50", "close_price": "802.66", "bid_price": "793.36"},
+        "MSFT": {"ask_price": "N/A", "open_price": "28.30", "company_name": "Microsoft Corpora", "bid_price": "28.50", "close_price": "28.37"},
+    }
+
+    // Example 1: Write command arguments out explicitly.
+
+    for sym, row := range stockData {
+        if _, err := conn.Do("HMSET", sym,
+            "company_name", row["company_name"],
+            "open_price", row["open_price"],
+            "ask_price", row["ask_price"],
+            "bid_price", row["bid_price"]); err != nil {
+            log.Fatal(err)
+        }
+    }
+
+    printAndDel(conn, "example 1", stockData)
+
+    // Example 2: Construct command arguments using range over a row map.
+
+    for sym, row := range stockData {
+        args := []interface{}{sym}
+        for k, v := range row {
+            args = append(args, k, v)
+        }
+        if _, err := conn.Do("HMSET", args...); err != nil {
+            log.Fatal(err)
+        }
+    }
+
+    printAndDel(conn, "example 2", stockData)
+
+    // Example 3: Construct command arguments using Redigo helper function.
+
+    for sym, row := range stockData {
+        if _, err := conn.Do("HMSET", redis.Args{sym}.AddFlat(row)...); err != nil {
+            log.Fatal(err)
+        }
+    }
+
+    printAndDel(conn, "example 3", stockData)
+}
+
+func printAndDel(conn redis.Conn, message string, stockData map[string]map[string]string) {
+    log.Print(message)
+    for sym := range stockData {
+        values, err := redis.Values(conn.Do("HGETALL", sym))
+        if err != nil {
+            log.Fatal(err)
+        }
+        log.Print(sym)
+        for i := 0; i < len(values); i += 2 {
+            log.Printf("  %s: %s", values[i], values[i+1])
+        }
+    }
+    for sym := range stockData {
+        if _, err := conn.Do("DEL", sym); err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+```
+* 例子2
+
+```golang
+package main
+
+import (
+    "github.com/garyburd/redigo/redis"
+    "log"
+)
+
+type Stock struct {
+    CompanyName string `redis:"company_name"`
+    OpenPrice   string `redis:"open_price"`
+    AskPrice    string `redis:"ask_price"`
+    ClosePrice  string `redis:"close_price"`
+    BidPrice    string `redis:"bid_price"`
+}
+
+func main() {
+    conn, err := redis.Dial("tcp", ":6379")
+    if err != nil {
+        log.Fatalf("Couldn't connect to Redis: %v\n", err)
+    }
+    defer conn.Close()
+
+    stockData := map[string]*Stock{
+        "GOOG": &Stock{CompanyName: "Google Inc.", OpenPrice: "803.99", AskPrice: "795.50", ClosePrice: "802.66", BidPrice: "793.36"},
+        "MSFT": &Stock{AskPrice: "N/A", OpenPrice: "28.30", CompanyName: "Microsoft Corpora", BidPrice: "28.50", ClosePrice: "28.37"},
+    }
+
+    for sym, row := range stockData {
+        if _, err := conn.Do("HMSET", redis.Args{sym}.AddFlat(row)...); err != nil {
+            log.Fatal(err)
+        }
+    }
+
+    for sym := range stockData {
+        values, err := redis.Values(conn.Do("HGETALL", sym))
+        if err != nil {
+            log.Fatal(err)
+        }
+        var stock Stock
+        if err := redis.ScanStruct(values, &stock); err != nil {
+            log.Fatal(err)
+        }
+        log.Printf("%s: %+v", sym, &stock)
+    }
+}
+```
+  
