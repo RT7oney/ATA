@@ -2010,3 +2010,14 @@ func main() {
     }
 }
 ```
+
+## 2017.04.20
+### mysql5.7新特性
+
+1. 在server层提供了操作JSON的函数，将JSON编码成BLOB然后交给存储引擎层进行处理
+2. MySQL相对于Mongodb的优势：可以混合存储结构化和非结构化的数据，同时拥有关系型数据库和非关系型数据库的优点，而且能够支持事物处理
+
+```ssh
+CREATE TABLE t1 (jdoc JSON);
+INSERT INTO t1 VALUES('{"key1": "value1", "key2": "value2"}');
+```
