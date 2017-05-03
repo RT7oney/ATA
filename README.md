@@ -2021,3 +2021,832 @@ func main() {
 CREATE TABLE t1 (jdoc JSON);
 INSERT INTO t1 VALUES('{"key1": "value1", "key2": "value2"}');
 ```
+
+## 2017.04.23
+### laravel Excel
+
+* 导出
+
+```php
+	public function export(){
+        $cellData = [
+            ['学号','姓名','成绩'],
+            ['10001','AAAAA','99'],
+            ['10002','BBBBB','92'],
+            ['10003','CCCCC','95'],
+            ['10004','DDDDD','89'],
+            ['10005','EEEEE','96'],
+        ];
+        Excel::create('学生成绩',function($excel) use ($cellData){
+            $excel->sheet('score', function($sheet) use ($cellData){
+                $sheet->rows($cellData);
+            });
+        })->export('xls');
+    }
+```
+如果你要导出csv或者xlsx文件，只需将export方法中的参数改成csv或xlsx即可。
+
+如果还要将该Excel文件保存到服务器上，可以使用store方法：
+
+```php
+Excel::create('学生成绩',function($excel) use ($cellData){
+     $excel->sheet('score', function($sheet) use ($cellData){
+         $sheet->rows($cellData);
+     });
+})->store('xls')->export('xls');
+```
+文件默认保存到storage/exports目录下，如果出现文件名中文乱码，将上述代码文件名做如下修改即可：
+
+```php
+iconv('UTF-8', 'GBK', '学生成绩')
+```
+
+* 导入
+
+```php
+public function Importexcel($files){  
+  
+    $res = [];  
+    Excel::load($files, function($reader) use( &$res ) {  
+        $reader = $reader->getSheet(0);  
+        $res = $reader->toArray();  
+    });  
+      
+    return $res;  
+}  
+```
+
+Basics 基础
+
+A new file can be created using thecreatemethod with the filename as first parameter.
+
+创建一个文件，使用第一个参数作为文件名。
+
+Excel::create('Filename');
+To manipulate the creation of the file you can use the callback
+
+可以使用回调函数操作创建的文件。
+
+Excel::create('Filename', function($excel) {
+
+// Call writer methods here
+
+});
+Changing properties
+
+更改属性
+
+There are a couple of properties we can change inside the closure. Most of them are set to the config values by default. See  app/config/packages/maatwebsite/excel/config.php.
+
+有几个属性可以改变    大多数设置了默认。
+
+Excel::create('Filename', function($excel) {
+
+ // Set the title  设置标题
+
+                 $excel->setTitle('Our new awesome title');
+
+// Chain the setters  设置创作人
+
+                    $excel->setCreator('Maatwebsite')
+
+                              ->setCompany('Maatwebsite');
+
+// Call them separately   设置 介绍说明
+
+                     $excel->setDescription('A demonstration to change the file properties');
+
+});
+Go to the reference guide to see a list of available properties.
+
+去参考指南以查看可用属性的列表。
+
+Exporting导出
+
+To download the created file, use->export($ext) or ->download($ext).
+下载创建的excel
+
+Export to Excel5 (xls)格式
+
+Excel::create('Filename', function($excel) {
+
+})->export('xls');
+// or
+
+->download('xls');
+Export to Excel2007 (xlsx)格式
+
+->export('xlsx');
+// or
+
+->download('xlsx');
+Export to CSV格式
+
+->export('csv');
+// or
+
+->download('csv');
+You can set the default enclosure and delimiter inside the config
+
+在配置文件里设置 范围 和 定界符
+
+Export to PDF 导出为PDF格式
+
+To export files to pdf, you will have to include"dompdf/dompdf": "~0.6.1","mpdf/mpdf": "~5.7.3"or"tecnick.com/tcpdf": "~6.0.0"in yourcomposer.jsonand change theexport.pdf.driverconfig setting accordingly.
+
+->export('pdf');
+
+如果想要导出格式为PDF，则需要安装扩展
+
+NewExcelFile injections
+
+新的Excel文件 注入
+
+Following the Laravel 5.0 philosophy with its new awesome FormRequest injections, we introduce you NewExcelFile injections.
+
+NewExcelFile class
+
+This NewExcelFile is a wrapper for a new Excel file. Inside thegetFilename()you can declare the wanted filename.
+
+class UserListExport extends \Maatwebsite\Excel\Files\NewExcelFile {
+
+public function getFilename()
+
+        {
+
+           return 'filename';
+
+          }
+
+}
+Usage  使用 用途
+
+You can inject these NewExcelFiles inside the __constructor or inside the method (when using Laravel 5.0), in e.g. the controller.
+
+class ExampleController extends Controller {
+
+public function exportUserList(UserListExport $export)
+
+{
+
+// work on the export
+
+return $export->sheet('sheetName', function($sheet)
+
+{
+
+})->export('xls');
+
+}
+}
+Export Handlers
+
+导出事件处理器
+
+To decouple your Excel-export code completely from the controller, you can use the export handlers.
+
+class ExampleController extends Controller {
+
+public function exportUserList(UserListExport $export)
+
+{
+
+// Handle the export
+
+$export->handleExport();
+
+}
+}
+ThehandleExport()method will dynamically call a handler class which is your class name appended withHandler
+
+class UserListExportHandler implements \Maatwebsite\Excel\Files\ExportHandler {
+
+public function handle(UserListExport $export)
+
+{
+
+// work on the export
+
+return $export->sheet('sheetName', function($sheet)
+
+{
+
+})->export('xls');
+
+}
+}
+Store on server   把文件保存到服务器上
+
+To store the created file on the server, use->store($ext, $path = false, $returnInfo = false)or->save().
+Normal export to default storage path
+
+By default the file will be stored inside theapp/storage/exportsfolder, which has been defined in theexport.phpconfig file.
+
+Excel::create('Filename', function($excel) {
+
+// Set sheets
+
+})->store('xls');
+Normal export to custom storage path   一般导出到自定义的路径
+
+If you want to use a custom storage path (e.g. to separate the files per client), you can set the folder as the second parameter.
+
+->store('xls', storage_path('excel/exports'));
+Store and export  保存并导出
+
+->store('xls')->export('xls');
+Store and return storage info  保存并显示保存信息
+
+If you want to return storage information, set the third paramter to true or change the config setting insideexport.php.
+
+->store('xls', false, true);
+KeyExplanation
+
+fullFull path with filename
+
+pathPath without filename
+
+fileFilename
+
+titleFile title
+
+extFile extension
+
+Make sure your storage folder iswritable!
+
+Sheets  工作表
+
+Creating a sheet   创建一个工作表
+
+To create a new sheet inside our newly created file, use->sheet('Sheetname').
+
+Excel::create('Filename', function($excel) {
+
+$excel->sheet('Sheetname', function($sheet) {
+
+// Sheet manipulation
+
+});
+
+})->export('xls');
+Creating multiple sheets   创建多个工作表
+
+You can set as many sheets as you like inside the file:
+
+Excel::create('Filename', function($excel) {
+
+// Our first sheet
+
+$excel->sheet('First sheet', function($sheet) {
+
+});
+
+// Our second sheet
+
+$excel->sheet('Second sheet', function($sheet) {
+
+});
+
+})->export('xls');
+Changing properties   修改属性
+
+There are a couple of properties we can change inside the closure. Most of them are set to the config values by default. Seeapp/config/packages/maatwebsite/excel/config.php.
+
+Excel::create('Filename', function($excel) {
+
+$excel->sheet('Sheetname', function($sheet) {
+
+$sheet->setOrientation('landscape');
+
+});
+
+})->export('xls');
+Go to the reference guide to see a list of available properties.
+
+Default page margin    页边距  页边空白
+
+It's possible to set the default page margin inside the config fileexcel::export.sheets. It accepts boolean, single value or array.
+
+To manually set the page margin you can use:->setPageMargin()
+// Set top, right, bottom, left
+
+$sheet->setPageMargin(array(
+
+0.25, 0.30, 0.25, 0.30
+
+));
+
+// Set all margins
+
+$sheet->setPageMargin(0.25);
+Password protecting a sheet   使用密码保护一个工作表
+
+A sheet can be password protected with$sheet->protect():
+// Default protect   默认设置
+
+                 $sheet->protect('password');
+
+// Advanced protect       更高级的设置
+
+$sheet->protect('password', function(\PHPExcel_Worksheet_Protection $protection) {
+
+              $protection->setSort(true);
+
+});
+Creating a sheet from an array      用一个数组创建一个工作表
+
+Array
+
+To create a new file from an array use->fromArray($source, $nullValue, $startCell, $strictNullComparison, $headingGeneration)inside the sheet closure.
+Excel::create('Filename', function($excel) {  
+
+          $excel->sheet('Sheetname', function($sheet) {
+
+                        $sheet->fromArray(array(   使用fromArray()
+
+                                      array('data1', 'data2'),
+
+                                      array('data3', 'data4')
+
+                        ));
+
+           });
+
+})->export('xls');
+Alternatively you can use->with().  或者使用 with()
+
+$sheet->with(array(
+
+                array('data1', 'data2'),
+
+                array('data3', 'data4')
+
+));
+If you want to pass variables inside the closure, useuse($data)
+
+$data = array(
+
+             array('data1', 'data2'),
+
+             array('data3', 'data4')
+
+);
+Excel::create('Filename', function($excel) use($data) {
+
+                    $excel->sheet('Sheetname', function($sheet) use($data) {
+
+                    $sheet->fromArray($data);
+
+         });
+
+})->export('xls');
+Null comparision
+
+By default 0 is shown as an empty cell. If you want to change this behaviour, you can pass true as 4th parameter:
+
+// Will show 0 as 0
+
+$sheet->fromArray($data, null, 'A1', true);
+
+To change the default behaviour, you can useexcel::export.sheets.strictNullComparisonconfig setting.
+
+Eloquent model
+
+It's also possible to pass an Eloquent model and export it by using->fromModel($model). The method accepts the same parameters as fromArray
+
+Auto heading generation
+
+By default the export will use the keys of your array (or model attribute names) as first row (header column). To change this behaviour you can edit the default config setting (excel::export.generate_heading_by_indices) or passfalseas 5th parameter:
+
+// Won't auto generate heading columns
+
+$sheet->fromArray($data, null, 'A1', false, false);
+
+Row manipulation   一行发操作
+
+Manipulate certain row   操作某一行
+
+Change cell values
+
+// Manipulate first row           设置第一行
+
+$sheet->row(1, array(
+
+'test1', 'test2'
+
+));
+// Manipulate 2nd row            设置第二行
+
+$sheet->row(2, array(
+
+'test3', 'test4'
+
+));
+Manipulate row cells      操作行单元格
+
+// Set black background         设置黑色背景
+
+$sheet->row(1, function($row) {
+
+               // call cell manipulation methods
+
+               $row->setBackground('#000000');
+
+});
+Append row  附加行
+
+// Append row after row 2   第二行后添加 附加行
+
+$sheet->appendRow(2, array(
+
+              'appended', 'appended'
+
+));
+// Append row as very last   最后添加附加行
+
+$sheet->appendRow(array(
+
+              'appended', 'appended'
+
+));
+Prepend row   前置行
+
+// Add before first row
+
+$sheet->prependRow(1, array(
+
+               'prepended', 'prepended'
+
+));
+// Add as very first
+
+$sheet->prependRow(array(
+
+                   'prepended', 'prepended'
+
+));
+Append multiple rows    附加多行
+
+// Append multiple rows
+
+$sheet->rows(array(
+
+              array('test1', 'test2'),
+
+              array('test3', 'test4')
+
+));
+// Append multiple rows
+
+$sheet->rows(array(
+
+                array('test5', 'test6'),
+
+                array('test7', 'test8')
+
+));
+Cell manipulation  单元格操作
+
+$sheet->cell('A1', function($cell) {
+
+// manipulate the cell
+
+});
+$sheet->cells('A1:A5', function($cells) {
+
+// manipulate the range of cells
+
+});
+
+Set background
+
+To change the background of a range of cells we can use->setBackground($color, $type, $colorType)
+
+// Set black background
+
+$cells->setBackground('#000000');
+
+Change fonts
+
+// Set with font color
+
+$cells->setFontColor('#ffffff');
+
+// Set font family
+
+$cells->setFontFamily('Calibri');
+
+// Set font size
+
+$cells->setFontSize(16);
+
+// Set font weight to bold
+
+$cells->setFontWeight('bold');
+
+// Set font
+
+$cells->setFont(array(
+
+'family'    => 'Calibri',
+
+'size'      => '16',
+
+'bold'      =>  true
+
+));
+
+Set borders
+
+// Set all borders (top, right, bottom, left)
+
+$cells->setBorder('solid', 'none', 'none', 'solid');
+
+// Set borders with array
+
+$cells->setBorder(array(
+
+'borders' => array(
+
+'top'  => array(
+
+'style' => 'solid'
+
+),
+
+)
+
+));
+
+Set horizontal alignment    设置水平对齐方式
+
+// Set alignment to center
+
+$cells->setAlignment('center');
+Set vertical alignment    设置垂直对其方式
+
+// Set vertical alignment to middle
+
+$cells->setValignment('middle');
+Sheet styling   工作表样式
+
+General styling
+
+If you want to change the general styling of your sheet (not cell or range specific), you can use the->setStyle()method.
+
+// Set font with ->setStyle()`
+
+$sheet->setStyle(array(
+
+             'font' => array(
+
+                           'name'      =>  'Calibri',
+
+                            'size'      =>  15,
+
+                            'bold'      =>  true
+
+               )
+
+));
+Fonts
+
+To change the font for the current sheet use->setFont($array):
+
+$sheet->setFont(array(
+
+'family'    => 'Calibri',
+
+'size'      => '15',
+
+'bold'      => true
+
+));
+
+Separate setters
+
+// Font family
+
+$sheet->setFontFamily('Comic Sans MS');
+
+// Font size
+
+$sheet->setFontSize(15);
+
+// Font bold
+
+$sheet->setFontBold(true);
+
+Borders
+
+You can set borders for the sheet, by using:
+
+// Sets all borders
+
+$sheet->setAllBorders('thin');
+
+// Set border for cells
+
+$sheet->setBorder('A1', 'thin');
+
+// Set border for range
+
+$sheet->setBorder('A1:F10', 'thin');
+
+Go to the reference guide to see a list of available border styles
+
+Freeze rows
+
+If you want to freeze a cell, row or column, use:
+
+// Freeze first row
+
+$sheet->freezeFirstRow();
+
+// Freeze the first column
+
+$sheet->freezeFirstColumn();
+
+// Freeze the first row and column
+
+$sheet->freezeFirstRowAndColumn();
+
+// Set freeze
+
+$sheet->setFreeze('A2');
+
+Auto filter
+
+To enable the auto filter use->setAutoFilter($range = false).
+
+// Auto filter for entire sheet
+
+$sheet->setAutoFilter();
+
+// Set auto filter for a range
+
+$sheet->setAutoFilter('A1:E10');
+
+Cell size
+
+Set column width
+
+To set the column width use->setWidth($cell, $width).
+
+// Set width for a single column
+
+$sheet->setWidth('A', 5);
+
+// Set width for multiple cells
+
+$sheet->setWidth(array(
+
+'A'    =>  5,
+
+'B'    =>  10
+
+));
+
+Set row height
+
+To set the row height use->setHeight($row, $height).
+
+// Set height for a single row
+
+$sheet->setHeight(1, 50);
+
+// Set height for multiple rows
+
+$sheet->setHeight(array(
+
+1    =>  50,
+
+2    =>  25
+
+));
+
+Set cell size
+
+To set the cell size use->setSize($cell, $width, $height).
+
+// Set size for a single cell
+
+$sheet->setSize('A1', 500, 50);
+
+$sheet->setSize(array(
+
+'A1' => array(
+
+'width'    => 50
+
+'height'    => 500,
+
+)
+
+));
+
+Auto size
+
+By default the exported file be automatically auto sized. To change this behaviour you can either change the config or use the setters:
+
+// Set auto size for sheet
+
+$sheet->setAutoSize(true);
+
+// Disable auto size for sheet
+
+$sheet->setAutoSize(false);
+
+// Disable auto size for columns
+
+$sheet->setAutoSize(array(
+
+'A', 'C'
+
+));
+
+The default config setting can be found in:export.php.
+
+Column merging
+
+Merging cells
+
+To merge a range of cells, use->mergeCells($range).
+
+$sheet->mergeCells('A1:E1');
+
+Merging columns and rows
+
+To merge columns and rows, use->setMergeColumn($array).
+
+$sheet->setMergeColumn(array(
+
+'columns' => array('A','B','C','D'),
+
+'rows' => array(
+
+array(2,3),
+
+array(5,11),
+
+)
+
+));
+
+Column formatting
+
+To tell Excel how it should interpret certain columns, you can use->setColumnFormat($array).
+
+// Format column as percentage
+
+$sheet->setColumnFormat(array(
+
+'C' => '0%'
+
+));
+
+// Format a range with e.g. leading zeros
+
+$sheet->setColumnFormat(array(
+
+'A2:K2' => '0000'
+
+));
+
+// Set multiple column formats
+
+$sheet->setColumnFormat(array(
+
+'B' => '0',
+
+'D' => '0.00',
+
+'F' => '@',
+
+'F' => 'yyyy-mm-dd',
+
+));
+
+Go to the reference guide to see a list of available formats.
+
+Calling PHPExcel's native methods
+
+It's possible to call all native PHPExcel methods on the$exceland$sheetobjects.
+
+Calling Workbook methods
+
+Example:
+
+// Get default style for this workbook
+
+$excel->getDefaultStyle();
+
+Calling worksheet methods
+
+Example:
+
+// Protect cells
+
+$sheet->protectCells('A1', $password);
+
+Head over to PHPOffice to learn more about the native methods.
