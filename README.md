@@ -2915,7 +2915,143 @@ Head over to PHPOffice to learn more about the native methods.
 > * 数据流的阶段性能定位：获取用户某一操作的各个阶段（通过message来标识），捕获不同阶段的耗时，可用于定位系统瓶颈。 
 
 ## 2017.5.7
-### 当使用PUT或者DELETE请求的时候，浏览器表单的请求应该把form-data改成x-www-form-urlencoded
+### laravel的PUT和DELETE请求处理
+
+* 当使用PUT或者DELETE请求的时候，浏览器表单的请求应该把form-data改成x-www-form-urlencoded
+
+## 2017.5.9
+### PHP和redis实现消息队列
+
+###### 使用消息队列的一些场景：
+
+* 把瞬间服务器的请求处理换成异步处理，缓解服务器的压力
+
+* 实现数据顺序排列获取
+
+###### redis实现消息队列步骤如下：
+
+* redis函数rpush,lpop
+
+* 建议定时任务入队列
+
+* 创建定时任务出队列
+
+###### 把数据插入到队列中
+
+```php
+<?php
+ /**
+  * white.php
+  */
+
+ 
+$redis = new Redis();
+ 
+$redis->connect('127.0.0.1',6379);
+ 
+$password = '123456';
+ 
+$redis->auth($password);
+ 
+$arr = array('h','e','l','l','o','w','o','r','l','d');
+ 
+foreach($arr as $k=>$v){
+ 
+  $redis->rpush("mylist",$v);
+ 
+}
+```
+
+###### 定时扫描出队列
+
+```php
+<?php
+/**
+ * read.php
+ */
+
+$redis = new Redis();
+ 
+$redis->connect('127.0.0.1',6379);
+ 
+$password = '123456';
+ 
+$redis->auth($password);
+ 
+//list类型出队操作
+ 
+$value = $redis->lpop('mylist');
+ 
+if($value){
+ 
+ echo "出队的值".$value;
+ 
+}else{
+ 
+  echo "出队完成";
+ 
+}
+ 
+```
+
+###### 运行
+
+* 建立定时任务
+
+ \$ php white.php
+
+ \$ php read.php
+
+* 定时任务执行队列写入结果如下
+
+```ssh
+127.0.0.1:6379> lrange mylist 0 -1
+ 
+ 1) "h"
+ 
+ 2) "e"
+ 
+ 3) "l"
+ 
+ 4) "l"
+ 
+ 5) "o"
+ 
+ 6) "w"
+ 
+ 7) "o"
+ 
+ 8) "r"
+ 
+ 9) "l"
+ 
+10) "d"
+```
+　　
+
+* 定时任务执行出队列后：
+
+```ssh
+127.0.0.1:6379> lrange mylist 0 -1
+
+1) "e"
+
+2) "l"
+
+3) "l"
+
+4) "o"
+
+5) "w"
+
+6) "o"
+
+7) "r"
+
+8) "l"
+
+9) "d"
+```
 
 
 
