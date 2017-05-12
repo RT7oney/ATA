@@ -33,7 +33,7 @@ d.在多线程OS中，进程不是一个可执行的实体。
 	
 	for ($i = 0; $i < count($menu); $i++) {
 		 print_r($menu[$i]);
-		 var_dump(preg_match('/' . $menu[$i] . '/', $content));
+		 var\_dump(preg\_match('/' . $menu[$i] . '/', $content));
 		 echo '<br>';
 	}
 
