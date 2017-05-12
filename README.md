@@ -33,7 +33,7 @@ d.在多线程OS中，进程不是一个可执行的实体。
 	
 	for ($i = 0; $i < count($menu); $i++) {
 		 print_r($menu[$i]);
-		 var\_dump(preg\_match('/' . $menu[$i] . '/', $content));
+		 var_dump(preg_match('/' . $menu[$i] . '/', $content));
 		 echo '<br>';
 	}
 
@@ -3052,6 +3052,89 @@ if($value){
 
 9) "d"
 ```
+
+## 2017.5.11
+### go并发小结
+
+1 概念
+1.1 goroutine是Go并行设计的核心，goroutine的本质是轻量级线程
+1.2 golang的runtime实现了对轻量级线程即goroutine的智能调度管理
+1.3 P、M、G原理
+1.3.1 runtime有P、M、G三个概念，P对应操作系统进程--对程序的抽象， W对应操作系统线程--对寄存器的抽象，G对应goroutine--go实现的轻量级线程， 也即GreenThreads用户态线程 P、M由内核负责调度，G由runtime负责调度，也能实现被多个处理器调用 P用M执行G，并且runtime内部维护了一个G的队列deque存放当前可执行的G， 当G执行结束，M空闲下来，P从deque中取出下一个G继续在M中执行
+1.3.2 当G执行了带阻塞的系统调用时，M会被阻塞进而被系统挂起， P会将G留在M继续执行，并从deque取出新的G、新启动一个M来执行G 当G-M重新变成就绪状态之后，P又会在合适的状态继续执行G-M
+1.3.3 当P对象的G全部执行完之后，可以从别的P对象的deque中拿一半的G放到自己的deque执行
+1.3.4 进一步优化
+1.3.4.1 如果G阻塞，P会创建新的M装载G执行
+1.3.4.2 这在分布式、高并发的网络RPC/Web场景下非常浪费系统资源导致效率低下
+1.3.4.3 Go的优势就在于，在可能导致阻塞的系统调用上， 尽管Go提供的系统调用接口为阻塞方式调用，但是内部实现是非阻塞， 当goroutine进行系统调用阻塞之后，当前的G被设置为阻塞，但是M并不会被阻塞， 仍然可以继续取其他的G继续执行，这样就不会创建新的M，增加系统开销
+1.3.4.4 goroutine被设置为阻塞之后什么时候再次被设置为就绪状态，Go抽象了netpoller对象对IO进行多路复用， 在linux上使用epoll实现，当G阻塞时，netpoller将阻塞的文件描述符注册到epoll示例进行epoll_wait， 文件描述符就绪之后通知给阻塞的G，G就绪之后就可以继续执行了 这种方式避免了传统的多进程、多线程堆积方式， golang使每一个线程尽可能的忙碌起来进行计算，而不是阻塞在IO调用上， 这在高并发的网络通信场景下非常有效
+1.3.5 参考资料
+1.3.5.1 http://m.yl1001.com/group_article/3231471449287668.htm
+1.3.5.2 http://tieba.baidu.com/p/3542454435?share=9105&fr=share
+1.3.5.3 http://m.blog.csdn.net/article/details?id=50283557
+1.3.5.4 http://www.tuicool.com/m/articles/Qr6BRz
+1.3.5.5 内存上限问题
+2 goroutine使用
+2.1 goroutine通过go关键字实现，其实就是一个普通的函数，如：go hello(a, b, c)
+2.2 与线程思路一样，main相当于主线程，即主goroutine，如果不设置，主goroutine不会主动等待所有goroutine结束之后结束main
+2.3 GOMAXPROCS设置问题
+2.3.1 默认情况下，调度器仅使用单线程，也就是说只实现了并发
+2.3.2 想要发挥多核处理器的并行，需要在我们的程序中显式调用 runtime.GOMAXPROCS(n)
+2.3.3 参考
+2.3.3.1 http://bbs.csdn.net/topics/390618790?page=1
+2.3.3.2 https://zhidao.baidu.com/question/1509937302744176180.html
+2.3.3.3 https://www.zhihu.com/question/22503180
+2.3.3.4 http://www.hankcs.com/program/cpp/multi-core_cpu_to_open_several_threads_best.html
+2.3.3.5 http://www.jb51.net/article/61605.htm
+2.4 runtime.Gosched()表示让CPU把时间片让给别人,下次某个时候继续恢复执行该goroutine
+3 channel使用
+3.1 Go提供了一个很好的机制channel供goroutine之间相互通信
+3.2 channel可以与Unix shell 中的双向管道做类比：可以通过它发送或者接收值，也可以直接认为就是线程队列
+3.3 需要注意： 定义一个channel时，也需要定义发送到channel的值的类型 而且必须使用make创建初始化channel
+3.4 channel通过操作符<-来接收和发送数据，操作符在ch左侧表示接收数据即出队，操作符在右侧表示发送数据即入队
+3.5 Unbuffered Channel
+3.5.1 默认情况下，channel是不带缓存的 也就是说，channel接收和发送数据都是阻塞的，除非另一端已经准备好 所以如果使用默认的channel，则必须有多个goroutine存在， 单个goroutine不可能既准备好了发送数据也同时准备好了接收数据 所以说： 无缓冲channel是在多个goroutine之间同步很棒的工具，这也是无缓冲channel的主要用途
+3.5.2 错误示例
+3.5.2.1
+3.5.3 错误结果
+3.5.3.1
+3.5.4 常见问题参考
+3.5.4.1 http://stackoverflow.com/questions/36505012/go-fatal-error-all-goroutines-are-asleep-deadlock
+3.5.4.2 http://stackoverflow.com/questions/26927479/go-language-fatal-error-all-goroutines-are-asleep-deadlock
+3.5.4.3 http://studygolang.com/articles/2410
+3.5.4.4 http://tieba.baidu.com/p/2685997128
+3.5.4.5 http://studygolang.com/articles/814
+3.5.4.6 http://www.oschina.net/question/2304895_230270
+3.5.5 sync.WaitGroup实现routine同步
+3.5.5.1 sync.WaitGroup也可以用于控制main routine等待所有子routine完成
+3.5.5.2 http://stackoverflow.com/questions/26927479/go-language-fatal-error-all-goroutines-are-asleep-deadlock
+3.5.6 select监控多个channel，主动发送QUIT信号
+3.5.6.1 https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/02.7.md#goroutine
+3.5.6.2 可以监控多个channel
+3.5.6.3 可以监控没有可读可写的消息
+3.5.6.4 可以设置超时控制
+3.6 Buffered Channel
+3.6.1 长度为1的channel不是默认的非缓存channel，非缓存channel长度相当于0，所以是阻塞的！
+3.6.2 语法： ch := make(chan type, value)
+3.6.3 channel遍历
+3.6.3.1 for i := range c // until channel c closed
+3.6.3.2 前提是c必须要在生产者中正确关闭，否则main routine出现异常，没有数据继续写入或者读出
+3.6.3.3 for i := range c能够不断的读取channel里面的数据，直到该channel被显式的关闭
+3.6.3.4 测试是否关闭
+3.6.3.4.1 v, ok := <-cha // ok == false is close and no data
+3.6.3.5 应该在生产者的地方关闭channel，而不是消费的地方去关闭它，这样容易引起panic
+3.6.3.6 channel不像文件之类的，不需要经常去关闭，只有当你确实没有任何发送数据了， 或者你想显式的结束range循环之类的
+4 runtime
+4.1 Goexit
+4.1.1 退出当前执行的goroutine，但是defer函数还会继续调用
+4.2 Gosched
+4.2.1 让出当前goroutine的执行权限，调度器安排其他等待的任务运行，并在下次某个时候从该位置恢复执行
+4.3 NumCPU
+4.3.1 返回 CPU 核数量，此处是逻辑核，包括超线程
+4.4 NumGoroutine
+4.4.1 返回正在执行和排队的任务总数
+4.5 GOMAXPROCS
+4.5.1 用来设置可以并行计算的CPU核数的最大值，并返回之前的值
 
 
 
