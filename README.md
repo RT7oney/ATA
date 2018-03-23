@@ -3270,3 +3270,1112 @@ docker-compose 1.2.0
     3.几种搜索类型的简介
     4.几种搜索类型的实例
 ```
+
+## 2017.8.15
+
+### 在做技术选型的时候应该选择vue还是angular还是react
+
+```sh
+angular 是通过directive实现复杂的dom修改，但是作为一个MVVM框架显得过重，不适用那些对性能要求比较高的站点，地东端的web站，其UI组件的封装相对复杂，不利于重用
+
+react 本身不是完整的MVC，MVVM框架，只负责view层，在很多web前端的场景下不适用于MVC的开发模式，而且react也可以非常完整的实现web component react是的数据单项绑定，是的react数据响应非常快
+```
+
+## 2017.9.12
+
+### go语言的defer
+
+```sh
+
+#示例代码一：
+func funcA() int {
+    x := 5
+    defer func() {
+        x += 1
+    }()
+    return x
+}
+#示例代码二：
+func funcB() (x int) {
+    defer func() {
+        x += 1
+    }()
+    return 5
+}
+<!--more-->
+#示例代码三：
+func funcC() (y int) {
+    x := 5
+    defer func() {
+        x += 1
+    }()
+    return x
+}
+ 
+#示例代码四：
+func funcD() (x int) {
+    defer func(x int) {
+        x += 1
+    }(x)
+    return 5
+}
+
+解析这几段代码，主要需要理解清楚以下几点知识：
+1、return语句的处理过程
+return xxx 语句并不是一条原子指令，其在执行的时候会进行语句分解成 返回变量=xxx return，最后执行return
+2、defer语句执行时机
+上文说过，defer语句是在函数关闭的时候调用，确切的说是在执行return语句的时候调用，注意，是return 不是return xxx
+3、函数参数的传递方式
+Go语言中普通的函数参数的传递方式是值传递，即新辟内存拷贝变量值，不包括slice和map，这两种类型是引用传递
+4、变量赋值的传递方式
+Go语言变量的赋值跟函数参数类似，也是值拷贝，不包括slice和map，这两种类型是内存引用
+
+按照以上原则，解析代码：
+
+#示例代码一：
+func funcA() int {
+    x := 5
+    temp=x      #temp变量表示未显示声明的return变量
+    func() {
+        x += 1
+    }()
+    return
+}
+返回temp的值，在将x赋值给temp后，temp未发生改变，最终返回值为5
+
+
+#示例代码二：
+func funcB() (x int) {
+    x = 5
+    func() {
+        x += 1
+    }()
+    return
+}
+返回x的值，先对其复制5，接着函数中改变为6，最终返回值为6
+
+
+#示例代码三：
+func funcC() (y int) {
+    x := 5
+    y = x       #这里是值拷贝
+    func() {
+        x += 1
+    }()
+    return
+}
+返回y的值，在将x赋值给y后，y未发生改变，最终返回值为5
+
+
+#示例代码四：
+func funcD() (x int) {
+    x := 5
+    func(x int) { #这里是值拷贝
+        x += 1
+    }(x)
+    return
+}
+返回x的值，传递x到匿名函数中执行的时候，传递的是x的拷贝，其内部修改不影响外部x的值，最终返回值为5
+
+```
+
+
+## 2017.10.5
+
+### 深入理解JavaScript中的this
+
+this 不是变量，不是属性，不能为其赋值，它始终指向调用它的对象
+感觉还TM太虚了，只要记住最重要的一条即可 ”它始终指向调用它的对象“ ，所以找到调用this的对象，就知道this到底指向谁了
+
+1、
+
+?
+1
+alert(this);
+瞅瞅，弹出来的是么子，要么是”object window“ ,要么 "object" 总之就对象了，是那个对象呢？
+?
+1
+alert(this === window);
+结果为'true' 所以了，现在调用它的对象是window了
+2、
+
+?
+1
+2
+3
+4
+var test = function(){
+  alert(this);
+}
+test();
+猜猜上面弹出什么，是不是和"alert(this)" 这句一样的
+?
+1
+2
+3
+4
+var test = function(){
+  alert(this === window);
+ }
+test();
+运行上面的代码，是不是弹出了'true' ?
+事情就这样完了？
+要这么简单的话，何必那么多人都去论述这个鸟了？
+3、
+
+再来
+
+?
+1
+2
+3
+4
+var test = function(){
+  alert(this === window);
+ }
+new test();
+哎哎，这次咋成'false'呢？
+
+记住”this 始终指向调用它的对象“，第”1、“处调用该段代码的直接对象是全局对象，即"window" ；第”2、“处虽然是函数，但是调用其的仍然是”window“(不要弄混了，函数虽然是对象，但是调用它的是另一个对象)；第”3、“处，使用了”new“ 这时其实已经发生变化了，这是一个构造函数，构造函数创建时创建了一个新的空的对象，即”new test()“创建了一个新的对象，然后再由这个对象指向函数"test"中的代码，因此此时this不在是window对象，而是该构造函数创建的新对象。
+4、
+
+?
+1
+2
+3
+4
+5
+6
+7
+var test ={
+  'a':1,
+  'b':function(){
+   alert(this === test)
+  }
+ }
+test.b();
+有了上面的论点，这下一下子清楚了吧！
+5、
+
+?
+1
+2
+3
+4
+5
+6
+7
+8
+var test ={
+  'a':1,
+  'b':function(){
+   alert(this === test)
+  }
+ }
+var test1 = test;
+test1.b();
+so, 你不会认为结果为"false"吧，错了，虽然'test1'的值为'test'  但是'test1'不还是'test'对象么，它有新产生对象，你暂且理解为引用的了，两个都指向一个对象，奉上下面一段代码为证
+
+?
+1
+2
+3
+4
+5
+6
+7
+8
+9
+var test ={
+  'a':1,
+  'b':function(){
+   alert(this === test)
+  }
+ }
+var test1 = test;
+test.a = 2;
+alert(test1.a);
+如果弹出了”1“，你来骂我
+6、再整个复杂的
+
+?
+1
+2
+3
+4
+5
+6
+7
+8
+9
+var test ={
+  'a':1,
+  'b':{
+   'b1':function(){
+    alert(this === test);
+   }
+  }
+ }
+test.b.b1();
+这是"true"还是"false"呢？
+按照上面的理论，这时"this"不再直接被'test'调用了，而是被'test.b' 调用, 奉上下面一段代码为证
+
+?
+1
+2
+3
+4
+5
+6
+7
+8
+9
+var test ={
+  'a':1,
+  'b':{
+   'b1':function(){
+    alert(this === test.b);
+   }
+  }
+ }
+test.b.b1();
+ 7、好再整个复杂点的
+
+?
+1
+2
+3
+4
+5
+6
+7
+var test = function(){
+  var innerTest = function(){
+   alert(this === test);
+  }
+  innerTest();
+ }
+test();
+你不会认为弹出"true"吧，不是按照上面的理论'innerTest'是被'test'调用的，然后'this'就指向'test'吗？
+额，错就错在是谁调用的'innerTest', 其实这种函数都是'window'对象调用的，及时你嵌套一千层，调用各个函数的都是'window'对象,奉上下面这段代码为证
+
+?
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+var test = function(){
+  var innerTest = function(){
+   alert(this === window);
+   var innerTest1 = function(){
+    alert(this === window);
+   }
+   innerTest1();
+  }
+  innerTest();
+ }
+test();
+8、再来一段特殊的
+
+?
+1
+2
+3
+4
+5
+6
+var test = function(){
+  alert(this === window);
+ }
+var test1 = {
+}
+test.apply(test1);
+这个我觉得大家都不会猜错，该函数的作用就是”调用一个对象的一个方法，以另一个对象替换当前对象“ 所以了'window' 对象已经被替代为'test1'，自然为'false'了,奉上如下代码以为证明
+
+?
+1
+2
+3
+4
+5
+6
+var test = function(){
+  alert(this === test1);
+ }
+ var test1 = {
+  }
+test.apply(test1);
+ 那么诸如'call'之类的也就相似了
+9、再来一个原型的继承，区别于字面量的继承
+
+?
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+var test = function(){
+ }
+ var my = function(){
+  this.a = function(){
+   alert(this === mytest2);
+  }
+ }
+ var mytest = new my();
+ test.prototype = mytest;
+ var mytest2 = new test();
+ mytest2.a();
+10、还剩下些什么了，可能就是'dom'对象了
+
+?
+1
+2
+3
+4
+5
+6
+7
+<script>
+  var mytest = function(context){
+   alert(context.getAttribute('id'));
+   alert(this === window);
+  }
+ </script>
+ <div id="test" onclick="mytest(this)">aaaa</div>
+
+
+## 2017.10.23
+
+### !!!go语言并发学习笔记，(深入理解)
+
+如果不是我对真正并行的线程的追求，就不会认识到Go有多么的迷人。
+
+Go语言从语言层面上就支持了并发，这与其他语言大不一样，不像以前我们要用Thread库 来新建线程，还要用线程安全的队列库来共享数据。
+
+以下是我入门的学习笔记。
+
+首先，并行!=并发, 两者是不同的，可以参考:http://concur.rspace.googlecode.com/hg/talk/concur.html
+
+Go语言的goroutines、信道和死锁
+goroutine
+Go语言中有个概念叫做goroutine, 这类似我们熟知的线程，但是更轻。
+
+以下的程序，我们串行地去执行两次loop函数:
+
+func loop() {
+    for i := 0; i < 10; i++ {
+        fmt.Printf("%d ", i)
+    }
+}
+
+
+func main() {
+    loop()
+    loop()
+}
+毫无疑问，输出会是这样的:
+
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9
+下面我们把一个loop放在一个goroutine里跑，我们可以使用关键字go来定义并启动一个goroutine:
+
+func main() {
+    go loop() // 启动一个goroutine
+    loop()
+}
+这次的输出变成了:
+
+0 1 2 3 4 5 6 7 8 9
+可是为什么只输出了一趟呢？明明我们主线跑了一趟，也开了一个goroutine来跑一趟啊。
+
+原来，在goroutine还没来得及跑loop的时候，主函数已经退出了。
+
+main函数退出地太快了，我们要想办法阻止它过早地退出，一个办法是让main等待一下:
+
+func main() {
+    go loop()
+    loop()
+    time.Sleep(time.Second) // 停顿一秒
+}
+这次确实输出了两趟，目的达到了。
+
+可是采用等待的办法并不好，如果goroutine在结束的时候，告诉下主线说“Hey, 我要跑完了！”就好了， 即所谓阻塞主线的办法，回忆下我们Python里面等待所有线程执行完毕的写法:
+
+for thread in threads:
+    thread.join()
+是的，我们也需要一个类似join的东西来阻塞住主线。那就是信道
+
+信道
+信道是什么？简单说，是goroutine之间互相通讯的东西。类似我们Unix上的管道（可以在进程间传递消息）， 用来goroutine之间发消息和接收消息。其实，就是在做goroutine之间的内存共享。
+
+使用make来建立一个信道:
+
+var channel chan int = make(chan int)
+// 或
+channel := make(chan int)
+那如何向信道存消息和取消息呢？ 一个例子:
+
+func main() {
+    var messages chan string = make(chan string)
+    go func(message string) {
+        messages <- message // 存消息
+    }("Ping!")
+
+    fmt.Println(<-messages) // 取消息
+}
+默认的，信道的存消息和取消息都是阻塞的 (叫做无缓冲的信道，不过缓冲这个概念稍后了解，先说阻塞的问题)。
+
+也就是说, 无缓冲的信道在取消息和存消息的时候都会挂起当前的goroutine，除非另一端已经准备好。
+
+比如以下的main函数和foo函数:
+
+var ch chan int = make(chan int)
+
+func foo() {
+    ch <- 0  // 向ch中加数据，如果没有其他goroutine来取走这个数据，那么挂起foo, 直到main函数把0这个数据拿走
+}
+
+func main() {
+    go foo()
+    <- ch // 从ch取数据，如果ch中还没放数据，那就挂起main线，直到foo函数中放数据为止
+}
+那既然信道可以阻塞当前的goroutine, 那么回到上一部分「goroutine」所遇到的问题「如何让goroutine告诉主线我执行完毕了」 的问题来, 使用一个信道来告诉主线即可:
+
+var complete chan int = make(chan int)
+
+func loop() {
+    for i := 0; i < 10; i++ {
+        fmt.Printf("%d ", i)
+    }
+
+    complete <- 0 // 执行完毕了，发个消息
+}
+
+
+func main() {
+    go loop()
+    <- complete // 直到线程跑完, 取到消息. main在此阻塞住
+}
+如果不用信道来阻塞主线的话，主线就会过早跑完，loop线都没有机会执行、、、
+
+其实，无缓冲的信道永远不会存储数据，只负责数据的流通，为什么这么讲呢？
+
+从无缓冲信道取数据，必须要有数据流进来才可以，否则当前线阻塞
+
+数据流入无缓冲信道, 如果没有其他goroutine来拿走这个数据，那么当前线阻塞
+
+所以，你可以测试下，无论如何，我们测试到的无缓冲信道的大小都是0 (len(channel))
+
+如果信道正有数据在流动，我们还要加入数据，或者信道干涩，我们一直向无数据流入的空信道取数据呢？ 就会引起死锁
+
+死锁
+一个死锁的例子:
+
+func main() {
+    ch := make(chan int)
+    <- ch // 阻塞main goroutine, 信道c被锁
+}
+执行这个程序你会看到Go报这样的错误:
+
+fatal error: all goroutines are asleep - deadlock!
+何谓死锁? 操作系统有讲过的，所有的线程或进程都在等待资源的释放。如上的程序中, 只有一个goroutine, 所以当你向里面加数据或者存数据的话，都会锁死信道， 并且阻塞当前 goroutine, 也就是所有的goroutine(其实就main线一个)都在等待信道的开放(没人拿走数据信道是不会开放的)，也就是死锁咯。
+
+我发现死锁是一个很有意思的话题，这里有几个死锁的例子:
+
+只在单一的goroutine里操作无缓冲信道，一定死锁。比如你只在main函数里操作信道:
+
+func main() {
+    ch := make(chan int)
+    ch <- 1 // 1流入信道，堵塞当前线, 没人取走数据信道不会打开
+    fmt.Println("This line code wont run") //在此行执行之前Go就会报死锁
+}
+如下也是一个死锁的例子:
+
+var ch1 chan int = make(chan int)
+var ch2 chan int = make(chan int)
+
+func say(s string) {
+    fmt.Println(s)
+    ch1 <- <- ch2 // ch1 等待 ch2流出的数据
+}
+
+func main() {
+    go say("hello")
+    <- ch1  // 堵塞主线
+}
+其中主线等ch1中的数据流出，ch1等ch2的数据流出，但是ch2等待数据流入，两个goroutine都在等，也就是死锁。
+
+其实，总结来看，为什么会死锁？非缓冲信道上如果发生了流入无流出，或者流出无流入，也就导致了死锁。或者这样理解 Go启动的所有goroutine里的非缓冲信道一定要一个线里存数据，一个线里取数据，要成对才行 。所以下面的示例一定死锁:
+
+c, quit := make(chan int), make(chan int)
+
+go func() {
+   c <- 1  // c通道的数据没有被其他goroutine读取走，堵塞当前goroutine
+   quit <- 0 // quit始终没有办法写入数据
+}()
+
+<- quit // quit 等待数据的写
+仔细分析的话，是由于：主线等待quit信道的数据流出，quit等待数据写入，而func被c通道堵塞，所有goroutine都在等，所以死锁。
+
+简单来看的话，一共两个线，func线中流入c通道的数据并没有在main线中流出，肯定死锁。
+
+但是，是否果真 所有不成对向信道存取数据的情况都是死锁?
+
+如下是个反例:
+
+func main() {
+    c := make(chan int)
+
+    go func() {
+       c <- 1
+    }()
+}
+程序正常退出了，很简单，并不是我们那个总结不起作用了，还是因为一个让人很囧的原因，main又没等待其它goroutine，自己先跑完了， 所以没有数据流入c信道，一共执行了一个goroutine, 并且没有发生阻塞，所以没有死锁错误。
+
+那么死锁的解决办法呢？
+
+最简单的，把没取走的数据取走，没放入的数据放入， 因为无缓冲信道不能承载数据，那么就赶紧拿走！
+
+具体来讲，就死锁例子3中的情况，可以这么避免死锁:
+
+c, quit := make(chan int), make(chan int)
+
+go func() {
+    c <- 1
+    quit <- 0
+}()
+
+<- c // 取走c的数据！
+<-quit
+另一个解决办法是缓冲信道, 即设置c有一个数据的缓冲大小:
+
+c := make(chan int, 1)
+这样的话，c可以缓存一个数据。也就是说，放入一个数据，c并不会挂起当前线, 再放一个才会挂起当前线直到第一个数据被其他goroutine取走, 也就是只阻塞在容量一定的时候，不达容量不阻塞。
+
+这十分类似我们Python中的队列Queue不是吗？
+
+无缓冲信道的数据进出顺序
+我们已经知道，无缓冲信道从不存储数据，流入的数据必须要流出才可以。
+
+观察以下的程序:
+
+var ch chan int = make(chan int)
+
+func foo(id int) { //id: 这个routine的标号
+    ch <- id
+}
+
+func main() {
+    // 开启5个routine
+    for i := 0; i < 5; i++ {
+        go foo(i)
+    }
+
+    // 取出信道中的数据
+    for i := 0; i < 5; i++ {
+        fmt.Print(<- ch)
+    }
+}
+我们开了5个goroutine，然后又依次取数据。其实整个的执行过程细分的话，5个线的数据 依次流过信道ch, main打印之, 而宏观上我们看到的即 无缓冲信道的数据是先到先出，但是 无缓冲信道并不存储数据，只负责数据的流通
+
+缓冲信道
+终于到了这个话题了, 其实缓存信道用英文来讲更为达意: buffered channel.
+
+缓冲这个词意思是，缓冲信道不仅可以流通数据，还可以缓存数据。它是有容量的，存入一个数据的话 , 可以先放在信道里，不必阻塞当前线而等待该数据取走。
+
+当缓冲信道达到满的状态的时候，就会表现出阻塞了，因为这时再也不能承载更多的数据了，「你们必须把 数据拿走，才可以流入数据」。
+
+在声明一个信道的时候，我们给make以第二个参数来指明它的容量(默认为0，即无缓冲):
+
+var ch chan int = make(chan int, 2) // 写入2个元素都不会阻塞当前goroutine, 存储个数达到2的时候会阻塞
+如下的例子，缓冲信道ch可以无缓冲的流入3个元素:
+
+func main() {
+    ch := make(chan int, 3)
+    ch <- 1
+    ch <- 2
+    ch <- 3
+}
+如果你再试图流入一个数据的话，信道ch会阻塞main线, 报死锁。
+
+也就是说，缓冲信道会在满容量的时候加锁。
+
+其实，缓冲信道是先进先出的，我们可以把缓冲信道看作为一个线程安全的队列：
+
+func main() {
+    ch := make(chan int, 3)
+    ch <- 1
+    ch <- 2
+    ch <- 3
+
+    fmt.Println(<-ch) // 1
+    fmt.Println(<-ch) // 2
+    fmt.Println(<-ch) // 3
+}
+信道数据读取和信道关闭
+你也许发现，上面的代码一个一个地去读取信道简直太费事了，Go语言允许我们使用range来读取信道:
+
+func main() {
+    ch := make(chan int, 3)
+    ch <- 1
+    ch <- 2
+    ch <- 3
+
+    for v := range ch {
+        fmt.Println(v)
+    }
+}
+如果你执行了上面的代码，会报死锁错误的，原因是range不等到信道关闭是不会结束读取的。也就是如果 缓冲信道干涸了，那么range就会阻塞当前goroutine, 所以死锁咯。
+
+那么，我们试着避免这种情况，比较容易想到的是读到信道为空的时候就结束读取:
+
+ch := make(chan int, 3)
+ch <- 1
+ch <- 2
+ch <- 3
+for v := range ch {
+    fmt.Println(v)
+    if len(ch) <= 0 { // 如果现有数据量为0，跳出循环
+        break
+    }
+}
+以上的方法是可以正常输出的，但是注意检查信道大小的方法不能在信道存取都在发生的时候用于取出所有数据，这个例子 是因为我们只在ch中存了数据，现在一个一个往外取，信道大小是递减的。
+
+另一个方式是显式地关闭信道:
+
+ch := make(chan int, 3)
+ch <- 1
+ch <- 2
+ch <- 3
+
+// 显式地关闭信道
+close(ch)
+
+for v := range ch {
+    fmt.Println(v)
+}
+被关闭的信道会禁止数据流入, 是只读的。我们仍然可以从关闭的信道中取出数据，但是不能再写入数据了。
+
+等待多gorountine的方案
+那好，我们回到最初的一个问题，使用信道堵塞主线，等待开出去的所有goroutine跑完。
+
+这是一个模型，开出很多小goroutine, 它们各自跑各自的，最后跑完了向主线报告。
+
+我们讨论如下2个版本的方案:
+
+只使用单个无缓冲信道阻塞主线
+
+使用容量为goroutines数量的缓冲信道
+
+对于方案1, 示例的代码大概会是这个样子:
+
+var quit chan int // 只开一个信道
+
+func foo(id int) {
+    fmt.Println(id)
+    quit <- 0 // ok, finished
+}
+
+func main() {
+    count := 1000
+    quit = make(chan int) // 无缓冲
+
+    for i := 0; i < count; i++ {
+        go foo(i)
+    }
+
+    for i := 0; i < count; i++ {
+        <- quit
+    }
+}
+对于方案2, 把信道换成缓冲1000的:
+
+quit = make(chan int, count) // 容量1000
+其实区别仅仅在于一个是缓冲的，一个是非缓冲的。
+
+对于这个场景而言，两者都能完成任务, 都是可以的。
+
+无缓冲的信道是一批数据一个一个的「流进流出」
+
+缓冲信道则是一个一个存储，然后一起流出去
+
+
+## 2017.11.13
+
+### 如何优雅的关闭go channel
+
+Channel关闭原则
+
+不要在消费端关闭channel，不要在有多个并行的生产者时对channel执行关闭操作。
+
+也就是说应该只在[唯一的或者最后唯一剩下]的生产者协程中关闭channel，来通知消费者已经没有值可以继续读了。只要坚持这个原则，就可以确保向一个已经关闭的channel发送数据的情况不可能发生。
+
+暴力关闭channel的正确方法
+
+如果想要在消费端关闭channel，或者在多个生产者端关闭channel，可以使用recover机制来上个保险，避免程序因为panic而崩溃。
+
+func SafeClose(ch chan T) (justClosed bool) {
+	defer func() {
+		if recover() != nil {
+			justClosed = false
+		}
+	}()
+	
+	// assume ch != nil here.
+	close(ch) // panic if ch is closed
+	return true // <=> justClosed = true; return
+}
+使用这种方法明显违背了上面的channel关闭原则，然后性能还可以，毕竟在每个协程只会调用一次SafeClose，性能损失很小。
+
+同样也可以在生产消息的时候使用recover方法。
+
+ func SafeSend(ch chan T, value T) (closed bool) {
+	defer func() {
+		if recover() != nil {
+			// The return result can be altered 
+			// in a defer function call.
+			closed = true
+		}
+	}()
+	
+	ch <- value // panic if ch is closed
+	return false // <=> closed = false; return
+}
+礼貌的关闭channel方法
+
+还有不少人经常使用用sync.Once来关闭channel，这样可以确保只会关闭一次
+
+ type MyChannel struct {
+	C    chan T
+	once sync.Once
+}
+
+func NewMyChannel() *MyChannel {
+	return &MyChannel{C: make(chan T)}
+}
+
+func (mc *MyChannel) SafeClose() {
+	mc.once.Do(func() {
+		close(mc.C)
+	})
+}
+同样我们也可以使用sync.Mutex达到同样的目的。
+
+type MyChannel struct {
+	C      chan T
+	closed bool
+	mutex  sync.Mutex
+}
+
+func NewMyChannel() *MyChannel {
+	return &MyChannel{C: make(chan T)}
+}
+
+func (mc *MyChannel) SafeClose() {
+	mc.mutex.Lock()
+	if !mc.closed {
+		close(mc.C)
+		mc.closed = true
+	}
+	mc.mutex.Unlock()
+}
+
+func (mc *MyChannel) IsClosed() bool {
+	mc.mutex.Lock()
+	defer mc.mutex.Unlock()
+	return mc.closed
+}
+要知道golang的设计者不提供SafeClose或者SafeSend方法是有原因的，他们本来就不推荐在消费端或者在并发的多个生产端关闭channel，比如关闭只读channel在语法上就彻底被禁止使用了。
+
+优雅的关闭channel的方法
+
+上文的SafeSend方法一个很大的劣势在于它不能用在select块的case语句中。而另一个很重要的劣势在于像我这样对代码有洁癖的人来说，使用panic/recover和sync/mutex来搞定不是那么的优雅。下面我们引入在不同的场景下可以使用的纯粹的优雅的解决方法。
+
+多个消费者，单个生产者。这种情况最简单，直接让生产者关闭channel好了。
+
+package main
+
+import (
+	"time"
+	"math/rand"
+	"sync"
+	"log"
+)
+
+func main() {
+	rand.Seed(time.Now().UnixNano())
+	log.SetFlags(0)
+	
+	// ...
+	const MaxRandomNumber = 100000
+	const NumReceivers = 100
+	
+	wgReceivers := sync.WaitGroup{}
+	wgReceivers.Add(NumReceivers)
+	
+	// ...
+	dataCh := make(chan int, 100)
+	
+	// the sender
+	go func() {
+		for {
+			if value := rand.Intn(MaxRandomNumber); value == 0 {
+				// The only sender can close the channel safely.
+				close(dataCh)
+				return
+			} else {			
+				dataCh <- value
+			}
+		}
+	}()
+	
+	// receivers
+	for i := 0; i < NumReceivers; i++ {
+		go func() {
+			defer wgReceivers.Done()
+			
+			// Receive values until dataCh is closed and
+			// the value buffer queue of dataCh is empty.
+			for value := range dataCh {
+				log.Println(value)
+			}
+		}()
+	}
+	
+	wgReceivers.Wait()
+}
+多个生产者，单个消费者。这种情况要比上面的复杂一点。我们不能在消费端关闭channel，因为这违背了channel关闭原则。但是我们可以让消费端关闭一个附加的信号来通知发送端停止生产数据。
+
+package main
+
+import (
+	"time"
+	"math/rand"
+	"sync"
+	"log"
+)
+
+func main() {
+	rand.Seed(time.Now().UnixNano())
+	log.SetFlags(0)
+	
+	// ...
+	const MaxRandomNumber = 100000
+	const NumSenders = 1000
+	
+	wgReceivers := sync.WaitGroup{}
+	wgReceivers.Add(1)
+	
+	// ...
+	dataCh := make(chan int, 100)
+	stopCh := make(chan struct{})
+	// stopCh is an additional signal channel.
+	// Its sender is the receiver of channel dataCh.
+	// Its reveivers are the senders of channel dataCh.
+	
+	// senders
+	for i := 0; i < NumSenders; i++ {
+		go func() {
+			for {
+				// The first select here is to try to exit the goroutine
+				// as early as possible. In fact, it is not essential
+				// for this example, so it can be omitted.
+				select {
+				case <- stopCh:
+					return
+				default:
+				}
+				
+				// Even if stopCh is closed, the first branch in the
+				// second select may be still not selected for some
+				// loops if the send to dataCh is also unblocked.
+				// But this is acceptable, so the first select
+				// can be omitted.
+				select {
+				case <- stopCh:
+					return
+				case dataCh <- rand.Intn(MaxRandomNumber):
+				}
+			}
+		}()
+	}
+	
+	// the receiver
+	go func() {
+		defer wgReceivers.Done()
+		
+		for value := range dataCh {
+			if value == MaxRandomNumber-1 {
+				// The receiver of the dataCh channel is
+				// also the sender of the stopCh cahnnel.
+				// It is safe to close the stop channel here.
+				close(stopCh)
+				return
+			}
+			
+			log.Println(value)
+		}
+	}()
+	
+	// ...
+	wgReceivers.Wait()
+}
+就上面这个例子，生产者同时也是退出信号channel的接受者，退出信号channel仍然是由它的生产端关闭的，所以这仍然没有违背channel关闭原则。值得注意的是，这个例子中生产端和接受端都没有关闭消息数据的channel，channel在没有任何goroutine引用的时候会自行关闭，而不需要显示进行关闭。
+
+多个生产者，多个消费者
+
+这是最复杂的一种情况，我们既不能让接受端也不能让发送端关闭channel。我们甚至都不能让接受者关闭一个退出信号来通知生产者停止生产。因为我们不能违反channel关闭原则。但是我们可以引入一个额外的协调者来关闭附加的退出信号channel。
+
+package main
+
+import (
+	"time"
+	"math/rand"
+	"sync"
+	"log"
+	"strconv"
+)
+
+func main() {
+	rand.Seed(time.Now().UnixNano())
+	log.SetFlags(0)
+	
+	// ...
+	const MaxRandomNumber = 100000
+	const NumReceivers = 10
+	const NumSenders = 1000
+	
+	wgReceivers := sync.WaitGroup{}
+	wgReceivers.Add(NumReceivers)
+	
+	// ...
+	dataCh := make(chan int, 100)
+	stopCh := make(chan struct{})
+		// stopCh is an additional signal channel.
+		// Its sender is the moderator goroutine shown below.
+		// Its reveivers are all senders and receivers of dataCh.
+	toStop := make(chan string, 1)
+		// The channel toStop is used to notify the moderator
+		// to close the additional signal channel (stopCh).
+		// Its senders are any senders and receivers of dataCh.
+		// Its reveiver is the moderator goroutine shown below.
+	
+	var stoppedBy string
+	
+	// moderator
+	go func() {
+		stoppedBy = <- toStop
+		close(stopCh)
+	}()
+	
+	// senders
+	for i := 0; i < NumSenders; i++ {
+		go func(id string) {
+			for {
+				value := rand.Intn(MaxRandomNumber)
+				if value == 0 {
+					// Here, a trick is used to notify the moderator
+					// to close the additional signal channel.
+					select {
+					case toStop <- "sender#" + id:
+					default:
+					}
+					return
+				}
+				
+				// The first select here is to try to exit the goroutine
+				// as early as possible. This select blocks with one
+				// receive operation case and one default branches will
+				// be optimized as a try-receive operation by the
+				// official Go compiler.
+				select {
+				case <- stopCh:
+					return
+				default:
+				}
+				
+				// Even if stopCh is closed, the first branch in the
+				// second select may be still not selected for some
+				// loops (and for ever in theory) if the send to
+				// dataCh is also unblocked.
+				// This is why the first select block is needed.
+				select {
+				case <- stopCh:
+					return
+				case dataCh <- value:
+				}
+			}
+		}(strconv.Itoa(i))
+	}
+	
+	// receivers
+	for i := 0; i < NumReceivers; i++ {
+		go func(id string) {
+			defer wgReceivers.Done()
+			
+			for {
+				// Same as the sender goroutine, the first select here
+				// is to try to exit the goroutine as early as possible.
+				select {
+				case <- stopCh:
+					return
+				default:
+				}
+				
+				// Even if stopCh is closed, the first branch in the
+				// second select may be still not selected for some
+				// loops (and for ever in theory) if the receive from
+				// dataCh is also unblocked.
+				// This is why the first select block is needed.
+				select {
+				case <- stopCh:
+					return
+				case value := <-dataCh:
+					if value == MaxRandomNumber-1 {
+						// The same trick is used to notify
+						// the moderator to close the
+						// additional signal channel.
+						select {
+						case toStop <- "receiver#" + id:
+						default:
+						}
+						return
+					}
+					
+					log.Println(value)
+				}
+			}
+		}(strconv.Itoa(i))
+	}
+	
+	// ...
+	wgReceivers.Wait()
+	log.Println("stopped by", stoppedBy)
+}
+以上三种场景不能涵盖全部，但是它们是最常见最通用的三种场景，基本上所有的场景都可以划分为以上三类。
+
+结论
+
+
+## 2017.11.26  
+
+### 各类web前端框架的应用场景
+
+##### react的应用场景
+
+```sh
+1.我们在业务比较复杂的情况下还要保持着很高的性能 
+2.重用组件库，组件组合，高度可重用
+```
